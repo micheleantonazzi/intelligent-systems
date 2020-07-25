@@ -1,0 +1,54 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage{tabularx} % extra features for tabular environment
+\usepackage{amsmath}  % improve math presentation
+\usepackage{graphicx} % takes care of graphic including machinery
+\usepackage[margin=1in,letterpaper]{geometry} % decreases margins
+\usepackage{cite} % takes care of citations
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage[final]{hyperref} % adds hyper links inside the generated pdf file
+\hypersetup{
+	colorlinks=true,       % false: boxed links; true: colored links
+	linkcolor=blue,        % color of internal links
+	citecolor=blue,        % color of links to bibliography
+	filecolor=magenta,     % color of file links
+	urlcolor=blue         
+}
+\usepackage{gensymb}
+\usepackage{blindtext}
+%++++++++++++++++++++++++++++++++++++++++
+
+
+\begin{document}
+
+\title{Robotics and Deep Learning}
+\author{Michele Antonazzi}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+This work is an overview concerning robotics and the machine learning applications can have on it, with a particular focus on deep learning.  
+\end{abstract}
+
+\input{introduction.tex}
+\newpage
+
+\input{article_1.tex}
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{}
+A. Giusti \emph{et al}., "A Machine Learning Approach to Visual
+Perception of Forest Trails for Mobile Robots," in \emph{IEEE Robotics
+	and Automation Letters}, vol. 1, no. 2, pp. 661-667, July 2016, doi:
+10.1109/LRA.2015.2509024.
+
+\bibitem{}
+P. Santana, L. Correia, R. Mendonça, N. Alves, and J. Barata,
+"Tracking natural trails with swarm-based visual saliency," J. Field
+Rob., vol. 30, no. 1, pp. 64--86, 2013.
+
+\end{thebibliography}
+
+
+\end{document}

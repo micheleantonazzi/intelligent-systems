@@ -1,0 +1,84 @@
+\section{Introduction}\label{header-n3}
+
+In the last few years, advances in technologies and research have had a
+great impact on the development of robotics. The robots are employed
+every day in a large variety of contexts. They substitute humans in
+those activities that can be performed more quickly and precisely. An
+example is manufacturing when the production process is automatized
+using artificial agents to improve productivity and reduce costs. In
+this case, the robots are fixed manipulators with a limited range of
+motions, that depends on where it is bolted down. This characteristic
+strongly limits the agent's possibilities. Generally, a fixed robot is
+programmed to perform a single precise task and it operates in a
+controlled environment. This means that the algorithm foresees every
+possible situation and often it is coded as a state machine. In
+contrast, mobile robots would be able to travel within the environment
+in which they operate, applying their talents wherever it is most
+effective. Thank mobility, the robotics applications become almost
+limitless. Some of them are healthcare, entertainment, and rescue.
+Mobile robots are also employed in those tasks that are impossible or
+too dangerous for humans, as the exploration of hostile environments: a
+building on fire, the seabeds, or the surface of another planet. These
+robots can be controlled by humans or can be autonomous. The firsts are
+controlled through remote controls while the seconds perceive the
+environment and move autonomously according to their task, without human
+intervention. The main problem that a mobile robot has to solve is how
+to move inside the environment. The first aspect is the \emph{motion
+	control}. Each robot has a different locomotion system, specific for the
+characteristics of the environment in which it moves. Given its
+low-level complexity, the motion actions are performed by a specific
+software component. To perform the motion control task is necessary to
+use the kinematics: the study of how the robot's mechanical systems
+behave. To define the kinematics of a robot, it is necessary to define a
+geometrical model (specific for the mechanical characteristics of the
+locomotion system) that allows expression of robot motion in a global
+reference frame and in the robot's local reference frame. Using this
+notation, it is possible to define the robot's kinematics model that
+describes the movements and their constraints as a function. Through
+kinematics, it is resolved the significant challenge of \emph{position
+	estimation}. The next step is the \emph{perception}. An autonomous
+system has to acquire knowledge about the environment. This is done by
+taking measurements using various sensors and then extracting
+information from those measurements. With this information, a mobile
+robot can determine its position in the environment. This activity is
+called \emph{localization}. The last step for an autonomous mobile agent
+is \emph{navigation}. Given partial knowledge about its environment and
+a goal position or a series of positions, navigation is the ability of
+the robot to act based on its knowledge and sensor values to reach its
+goal positions as efficiently and as reliably as possible. There are two
+main sub-task of navigation: \emph{path planning} and \emph{obstacle
+	avoidance}. The first involves identifying a trajectory that will cause
+the robot to reach the goal location when executed. The second consists
+of modulating the trajectory of the robot in order to avoid collisions.
+Using the techniques explained before, an autonomous mobile robot is
+able to robustly navigate inside an environment to perform its tasks.
+However, a mobile robot operates in a highly non-deterministic context
+and the conventional algorithms often are not suitable or not robust
+enough. In the real world, in fact, there are a lot of different tasks
+that are too complicated to be modeled by a conventional algorithm. Some
+problems indeed may have a wide amount of data difficult to analyze. In
+this case, build a specific algorithm means to understand the complex
+patterns and the hidden correlations between the data. Instead, other
+tasks may be influenced by a lot of external factors that generate a
+large quantity of similar but different data. These factors are not easy
+to model, especially considered all together, and often they are not a
+priori known. This means that an algorithm performs well only in a
+controlled environment, that respects specific preconditions. On the
+other hand, if it is applied in the real world, the algorithm may
+encounter data that it cannot correctly analyze. A particular field of
+Computer Science is particularly suitable to solve these situations:
+\emph{machine learning} (ML). It represents a family of algorithms that
+learn automatically through experience. These algorithms are not
+designed for a specific task but they are general purposes so they can
+be used to solve each type of task. The principle behind machine
+learning is the following: each real phenomenon can be modeled as an
+unknown mathematical function which can be approximate by a machine
+learning algorithm. In this work, the focus is posed on \emph{deep
+	learning} and its application to robotics. Deep learning is based on
+artificial neural networks, inspired by the biological neural network
+that composed the animal brains. In the following sections are resumed
+some papers that apply deep learning to robotics. Each of them specifies
+the article title, the name of the journal where it has been published,
+and the publication year. For each article is summarized the approach
+proposed, the innovation with respect to the literature and the
+achievements.
