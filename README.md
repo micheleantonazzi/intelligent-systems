@@ -204,6 +204,35 @@ Performing visual place recognition (VPR) reliably is a challenge for any roboti
 
 In this work, the authors propose a hybrid neural network that incorporates both computer-science- and neuroscience-oriented models to perform VPR task. Their approach comprises two key components: FlyNet, a compact neural network, and a 1-d CANN as temporal model that encodes sequences of images to perform appearance-invariant VPR using real data. The resulting FlyNet+CANN model achieves competitive AUC results, but with far less parameters, minimal training time and smaller computational footprint than conventional deep learning and algorithmic-based approaches.
 
+![FlyNet+CANN hybrid neural architecture](images/flynetcann.gif)
+
+## Previous work
+
+To design deep-learning-based models for VPR it is necessary to explore how this activity is performed by mammalians' brain and take inspiration from it. RatSLAM is an example, this method perform visual SLAM implementing the mechanisms using by rodents' brain. Other models performs VPR following the insect brains, like ants, bees and flies, that exhibits great capacity to navigate. Place recognition in insects is, however, most likely mediated by processing within the *mushroom bodies* (MB), a pair of structure involved in classification, learning and recognition of both olfactory and visual information. Their structure has been similar to a multi-layer perceptron (MLP) network, which receive massive inputs signals from sensory lobes. These impressive capabilities, achieved with relatively small brains, make them attractive models for roboticists. For FlyNet, we take inspiration from algorithmic insights found in the fruit fly olfactory neural circuit. The authors investigate how it can be integrated with recurrent-based networks for VPR task. Classical CNN models for image recognition has good performance but they have also  undesirable characteristics. In fact, these networks are difficult to implement in real robot,due to their size and complexity. In contrast, the authors propose the usage of compact neural models such as FlyNet to alleviate these requirements. To access and exploit the power of temporal information in many applications, researchers have developed a range of RNN. Another approach, implementing by RatSLAM, uses incorporated multi-dimensional CANN models with pre-assigned weights and structure. There exist other non-neural techniques, like SeqSLAM, that match sequences of pre-processed frames to provide an estimate of place. In this work, the authors attempt to developing a new bio-inspired, hybrid neural network for VPR tasks based on insect brain architectures such as FlyNet, which is extremely compact and can incorporate the filtering capabilities of a 1-d CANN to achieve competitive localization results.
+
+## Proposed method
+
+### FlyNet algorithm
+
+The FlyNet proposed in this works is inspired by the *fly algorithm*. The Drosophila's small brain identifies odors by assigning similar neural activity patterns to similar input odors. The neural networks is composed by 4 layers (the input layer, two hidden layer and the output layer). The network works as follow. A binary, sparse random matrix (*random projection*) connects the input layer to the second layer: each neuron receives and sums about 10% of the input neurons. This mechanism is also used to connect the second and third layers, but the number of neurons in the third layer is the same as the output one. Finally, using a WTA (winner-take-all) circuit, the third layer's neurons are mapped to the output layer, setting the first 5% with the high value to 1 and the rest to 0. The input layer generate a specific binary identifier for the input odor. The *FlyNet Algorithm* (FNA) proposed in this work is a mapping of the fly algorithm for vision purpose. The only difference is the WTA circuit, which is set to consider true the first 50% of the neurons with the high neurons.
+
+![The fly algorithm's network architecture. The random projection is shown only for the connection between the two hidden layer, but all the input layer is connected to the first hidden layer using the same mechanism](images/fly.gif)
+
+The following table reports the compact version of the FNA, seen without the network model. 
+
+### FlyNet models
+
+The authors implement a range of VPR models, using FNA and a module with temporal filtering capabilities. These network models are the following:
+
+* **FlyNet:** it's composed by the FNA compact representation that terminates with a fully connected (FC) layer.
+* **FlyNet+SeqSLAM:** it incorporates the SeqSLAM algorithm on top of our single-frame FlyNet network. This model can be compared along with the other following temporal models.
+* **FlyNet+RNN:** It is a purely neural model that incorporates a RNN on top of FlyNet.
+* **FlyNet+CANN:** it incorporates a variation of the CANN architecture proposed in RatSLAM, which is a 1 dimensional model, on top of the FlyNet algorithm.
+
+
+
+
+
 # Bibliography
 
 [1] Niko Sünderhauf, Oliver Brock, Walter Scheirer, Raia Hadsell, Dieter Fox, Jürgen Leitner, Ben Upcroft, Pieter Abbeel, Wolfram Burgard, Michael Milford, Peter Corke, "The Limits and Potentials of Deep Learning for Robotics", eprint arXiv:1804.06557, April 2018
