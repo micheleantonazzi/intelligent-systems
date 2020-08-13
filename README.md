@@ -222,16 +222,75 @@ The following table reports the compact version of the FNA, seen without the net
 
 ### FlyNet models
 
-The authors implement a range of VPR models, using FNA and a module with temporal filtering capabilities. These network models are the following:
+The authors implement a range of VPR models, using FNA and a module with temporal filtering capabilities. These networks models are the following:
 
-* **FlyNet:** it's composed by the FNA compact representation that terminates with a fully connected (FC) layer.
+* **FlyNet:** it's composed by the FNA that terminates with a fully connected (FC) network. Its architecture is a three-layer MLP with 64–64–1000 units respectively, where the first two layer make up the FNA and the last one compose the FC network.
 * **FlyNet+SeqSLAM:** it incorporates the SeqSLAM algorithm on top of our single-frame FlyNet network. This model can be compared along with the other following temporal models.
-* **FlyNet+RNN:** It is a purely neural model that incorporates a RNN on top of FlyNet.
-* **FlyNet+CANN:** it incorporates a variation of the CANN architecture proposed in RatSLAM, which is a 1 dimensional model, on top of the FlyNet algorithm.
+* **FlyNet+RNN:** It is a purely neural model that incorporates a RNN on top of FlyNet and terminates with another FC layer. Its architecture is the same as FlyNet (the FC layers have 100 units), with a 512 recurrent units. 
+* **FlyNet+CANN:** it incorporates a variation of the CANN architecture proposed in RatSLAM, which is a 1 dimensional model, on top of the FlyNet network. The CANN layer has 1002 units.
 
+![FlyNet models](images/flynetmodels.gif)
 
+## Experiments
 
+### Dataset and data preprocessing
 
+To evaluate the capabilities of the proposed FlyNet-based models, the authors conduct extensive experiments on two of the most widespread benchmarks used in VPR, the *Nordland* and *Oxford RobotCar* datasets. Nordland includes extreme seasonal changes across spring, summer, fall, and winter, captured during a train journey, in northern Norway. The summer traversal is used for training, and the remaining for testing. The Oxford RobotCar dataset provides over 100 traverses with different lighting (e.g. day, night) and weather (e.g. direct sun, overcast) conditions through a car ride in Oxford city. The images are pre-processed before being used by the models. FlyNet baselines convert the images into single-channel (gray-scale) frames normalized between [0, 1], and then resize them to 32 × 64. 
+
+### Experiments evaluation
+
+The authors train and test the four FlyNet models in order to find the best model and compare it with other existing state-of-the-art techniques. In particular, these methods are *SeqSLAM* (withput FNA attacked), *LoST-X* and *Multi-Process Fusion*.  
+
+#### Metrics
+
+VPR models' performance are evaluated using precision-recall (PR) curves and area under the curve (AUC) metrics. The tolerance used to consider a query place as a correct match is being within 20 frames around the ground truth location for the Nordland dataset, and up to 50 meters (10 frames) away from the ground truth for the Oxford RobotCar dataset. 
+
+#### Comparison of FlyNet to Other Neural Networks
+
+FlyNet (alone) is compared with other four singleframe models: a simple FC network, a FC network with dropout, a CNN and an implementation of NetVLAD method. The FC network has the same architecture as FlyNet: it is a three layer MLP with 64-64-1000 neurons respectively. The FC network with dropout is the same as the previous one, but with a dropout rate of 90% and 50% for the first and second layers, respectively, in order to approximate the FlyNet sparsity and for fair comparison purposes. The CNN model has 2 convolutional layers while the NetVLAD output representation dimensionality is reduced from 4096 to 64 to be comparable in size with the FlyNet. 
+
+## Experiments results
+
+### FlyNet vs. Other Single-Frame Networks
+
+FlyNet is directly competitive with both FC networks, despite FlyNet having over 3 times fewer parameters (64 k vs. 199 k). CNN and NetVLAD models, with 6 and 234 times more parameters than FlyNet respectively, the larger the model the better the results we obtained. Under *small environmental changes* (e.g. summer to fall) both networks achieved over 70% AUC. However, under *extreme visual changes* (e.g. summer to winter) all these models show relatively similar results, below 12% AUC, except for NetVLAD with 20% AUC.
+
+![Comparison of FlyNet (alone) to other single-frame neural networks. AUC results across different models on the Nordland dataset (left). Average accuracy over 10 training experiments vs. number of epochs for FlyNet (middle) and a fully connected (FC) network with dropout (right).](images/flynetothermodels.gif)
+
+### FlyNet models evaluation
+
+Although there are significant performance differences at a single-frame matching level, the figure below shows that when using sequence-based filtering techniques these differences reduce significantly. For FlyNet+SeqSLAM, the performance of FlyNet (alone) was significantly improved. Similarly, the RNN layer on top of FlyNet improved even further these results. However, when integrating the output of FlyNet with a 1-d CANN we were able to outperform these models, even under extreme environmental changes: this is the best model.
+
+![AUC results of the four FlyNet models](images/flynetcomparemodels.gif)
+
+### Best model vs. state-of-the-art methods
+
+MPF is performing better while being able to recall almost all places at 100% precision on both fall and winter testing traverses. FlyNet+CANN achieves state-of-the-art results, comparable with SeqSLAM and MPF in all these tested traverses.
+
+![AUC results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothers.gif)
+
+Similarly, PR performance on the Oxford RobotCar dataset is shown in the following figure. FlyNet+CANN not only achieves state-of-the-art results comparable with the other methods, but it maintains PR performance even under extreme environmental changes (e.g. overcast to night), as shown the the bottom-right side of the figure.
+
+![PR results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothersPR.gif)
+
+### Computational performance
+
+The processing time required to perform appearance-invariant VPR by our hybrid model is compared to those from state-of-theart methods in terms of running time for (1) feature extraction, (2) visual place matching between query and reference traverses, and (3) average place recognition time for a single query image from a 1000-image reference database. This Avg. Time (3) is calculated as (Feature Ext. (1) + Place Match. (2))/1000. Processing time results on the Nordland dataset are reported in the following table. The FlyNet+CANN can be up to 6.5, 310, and 1.5 times faster than MPF, LoST-X, and SeqSLAM, respectively.
+
+| **Method**      | **Feature extraction** | **Place matching** | **Avg. time (fps)**  |
+| --------------- | ---------------------- | ------------------ | -------------------- |
+| **FlyNet+CANN** | **35 sec**             | **25 sec**         | **0.06 sec (16.66)** |
+| MPF             | 1.9 min                | 4.6 min            | 0.39 sec (2.56)      |
+| LoST-X          | 110 min                | 200 min            | 18.6 sec (0.05)      |
+| SeqSLAM         | 50 sec                 | 40 sec             | 0.09 sec (11.11)     |
+
+The following figure shows the comparison between the networks' complexity and the results obtained, viewing the AUC metric for the most challenging appearance change (day to night). It is evident that the best model proposed in this works obtains the best results with the minimum number of parameters.
+
+![AUC perfoemance vs. network most challenging appearance change (day to night) ](images/flynetothermodeldimensions.gif)
+
+## Conclusions
+
+FlyNet+CANN model achieves competitive visual localization results compared to existing deep learning and algorithmic-based VPR techniques, but with significantly fewer parameters, a smaller footprint and reduced processing time. The authors want to demonstrate that, taking inspiration from biological brain, it is possible to build sample-efficient, high-performing VPR models. FlyNet has the same number of layers and sparse structure found in the fly olfactory neural circuit. Despite the fly brains extend by forty times the dimensionality of the inputs, the authors  experimentally shown that also reducing this dimension the FlyNet training accuracy remained around 96%. At the same time, FlyNet+CANN enabled the use of a relatively low-performance but fast network to get better VPR results, which is also able to generalize across challenging environmental changes.
 
 # Bibliography
 
