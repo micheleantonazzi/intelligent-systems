@@ -296,43 +296,100 @@ FlyNet+CANN model achieves competitive visual localization results compared to e
 
 ## Introduction
 
-In the last few years, the domestic service robots (DSRs) are become most popular: they have a lot of different and useful functions and they can help people with disabilities. Despite this, one of the main limitations of DSRs is their inability to naturally interact through natural language. This ability may be appreciated by non expert users. A particular task like various expressions relating to an object for fetching tasks. This work focuses on *multimodal language understanding for fetching instructions* (MLU-FI). This task consists of predicting a target instructed in natural language, such as "*Bring me the yellow box from the wooden cabinet.*". The purpose is understanding how extract instructions for robots from natural-language expressions. Natural language induces ambiguity because of the many-to-many mapping between the linguistic and physical world which makes it difficult to accurately infer the user’s intention. In this work, the authors propose the multimodal target-source classifier model with attention branch (MTCM-AB) which is an extension of the MTCM (proposed in [5]), with the addition of the attention branch network (ABN) explained in [6]. The MTCM module predict the region-wise likelihood of target and source candidates in the scene. Unlike other methods, MTCM can handle region-wise classification based on linguistic and visual features. The ABN is an image classifier, inspired by class activation mapping (CAM) structures, that generates attention maps. This line of research focuses on the production of image masks that, overlaid onto an image, highlight the most salient portions with respect to some given query or task. An attention map is an image with highlighted the salient regions of a given label. Multiple visual attention networks were also proposed in recent years for solving visual question answering. However, most of these approaches use only a single modality for attention: visual attention. By contrast, recent studies in multimodal language understanding have shown that both linguistic and visual attention are beneficial for the given task.
+In the last few years, the domestic service robots (DSRs) have become more popular: they have a lot of different and useful functions and they can help people with disabilities. Despite this, one of the main limitations of DSRs is their inability to naturally interact through natural language. This ability may be appreciated by non-expert users. A particular task like various expressions relating to an object for fetching tasks. This work focuses on *multimodal language understanding for fetching instructions* (MLU-FI). This task consists of predicting a target instructed in natural language, such as "*Bring me the yellow box from the wooden cabinet.*". The purpose is to understand how to extract instructions for robots from natural-language expressions. Natural language induces ambiguity because of the many-to-many mapping between the linguistic and physical world which makes it difficult to accurately infer the user’s intention. In this work, the authors propose the multimodal target-source classifier model with the attention branch (MTCM-AB) which is an extension of the MTCM (proposed in [5]), with the addition of the attention branch network (ABN) explained in [6]. The MTCM module predicts the region-wise likelihood of target and source candidates in the scene. Unlike other methods, MTCM can handle region-wise classification based on linguistic and visual features. The ABN is an image classifier, inspired by class activation mapping (CAM) structures, that generates attention maps. This line of research focuses on the production of image masks that, overlaid onto an image, highlight the most salient portions with respect to some given query or task. An attention map is an image with highlighted the salient regions of a given label. Multiple visual attention networks were also proposed in recent years for solving visual question answering. However, most of these approaches use only a single modality for attention: visual attention. By contrast, recent studies in multimodal language understanding have shown that both linguistic and visual attention is beneficial for the given task.
 
 ## Problem definition
 
-Our aim is to predict a target referred by an initial instruction among a set of candidate targets in a visual scene. Instructions are not constrained which is more natural but increases the complexity of the comprehension task because users may use referring expressions to characterize a target. Examples of possible instruction can be: "*Take the Kleenex box and put it in the bottom right box*" or "*Go to the kitchen and take the tea bottle on the upper shelf*". To address the MLU-FI are considered:
+The aim is to predict a target referred by an initial instruction among a set of candidate targets in a visual scene. Instructions are not constrained which is more natural but increases the complexity of the comprehension task because users may use referring expressions to characterize a target. Examples of possible instruction can be: "*Take the Kleenex box and put it in the bottom right box*" or "*Go to the kitchen and take the tea bottle on the upper shelf*". To address the MLU-FI are considered:
 
-* **Input:** a fetching instruction as a sentence in addition to an image of the scene. 
-* **Output:** the most likely target-source pair. The terms target and source are defined as follows.  
-  * **Target:** a daily object (e.g. bottle or snacks) that a user intends the robot to fetch.
-  * **Source:** the origin of the target (e.g. desk or cabinet).
+- **Input:** a fetching instruction as a sentence in addition to an image of the scene. 
 
-The evaluation metric is the prediction accuracy over the top-1 target prediction. Ultimately this study does not focus on object detection. The authors suppose that the bounding boxes of the target and source are given in advance. The MTCM-AB is not specifically designed for a given scene or context. It is validated on two types of dataset, in real and simulated environments described below.
+- **Output:** the most likely target-source pair. The terms target and source are defined as follows. 
 
-* **Home Environment:** In this configuration, the exeperiments use a simulation-based dataset from the Partner Robot Challenge Virtual Space (WRS-PV). WRS-PV depicts home environments as represented in the figure below. The three-dimensional environments (Unity-based) are augmented to make them more realistic. In this environment, a targeted DSR, that is HSR (Human Support Robot), is able to freely navigate and manipulate objects. In this context, the MTCM-AB predicts the most likely target among several candidates.
-* **Pick-and-Place Scene:** the PFN-PIC [7] dataset is designed for pick-and-place tasks from an armed robot with a top-view camera. The scene consists of four boxes, in which several candidate targets (up to 40) are randomly placed.
+- - **Target:** a daily object (e.g. bottle or snacks) that a user intends the robot to fetch.
+  - **Source:** the origin of the target (e.g. desk or cabinet).
+
+The evaluation metric is the prediction accuracy over the top-1 target prediction. Ultimately this study does not focus on object detection. The authors suppose that the bounding boxes of the target and source are given in advance. The MTCM-AB is not specifically designed for a given scene or context. It is validated on two types of datasets, in real and simulated environments described below.
+
+- **Home Environment:** In this configuration, the experiments use a simulation-based dataset from the Partner Robot Challenge Virtual Space (WRS-PV). WRS-PV depicts home environments as represented in the figure below. The three-dimensional environments (Unity-based) are augmented to make them more realistic. In this environment, a targeted DSR, that is HSR (Human Support Robot), can freely navigate and manipulate objects. In this context, the MTCM-AB predicts the most likely target among several candidates.
+- **Pick-and-Place Scene:** the PFN-PIC [7] dataset is designed for pick-and-place tasks from an armed robot with a top-view camera. The scene consists of four boxes, in which several candidate targets (up to 40) are randomly placed.
 
 ![Samples of the WRS-PV (left) and PFN-PIC datasets (right) where the source and target are given.](images/WRS-PVexample.gif)
 
 ## Proposed method
 
-The proposed method consists of target prediction with respect to an instruction in natural language. The authors extend the MTCM [5] with a attention branch network (ABN, [6]) that are used to improve the prediction from the linguistic and visual inputs. In ABN, the class attention map (CAM) network is extended to produce an attention mask for improving image classification. The ABN is decomposed into parallel branches to avoid deteriorating the classifier accuracy (both of them are classifiers):
+The proposed method consists of target prediction with respect to instruction in natural language. The authors extend the MTCM [5] with an attention branch network (ABN, [6]) that are used to improve the prediction from the linguistic and visual inputs. In ABN, the class attention map (CAM) network is extended to produce an attention mask for improving image classification. The ABN is decomposed into parallel branches to avoid deteriorating the classifier accuracy (both of them are classifiers):
 
 * an attention branch that produces attention maps and
 * a prediction branch that predicts the likelihood of some label.
 
-The MTCM-AB module produced in this woork, similarly to the MTCM, predicts the target and source from the full sentence. This module is composed by a set of sub-modules: the Target Attention Branch (TAB), the neighboring Context Attention Branch (nCAB) and the Linguistic Attention Branch (LAB). The MTCM-AD architecture is explained in detail in the following line and the figure below is a visual representation of it. The MTCM module works as follow:
+The MTCM-AB module produced in this work, similarly to the MTCM, predicts the target and source from the full sentence. This module is composed of a set of sub-modules: the Target Attention Branch (TAB), the neighboring Context Attention Branch (nCAB), and the Linguistic Attention Branch (LAB). The MTCM-AD architecture is explained in detail in the following line and the figure below is a visual representation of it. The MTCM module works as follow:
 
 * **Input:** for each target candidate i ∈ {1, . . ., N} and source i ∈ {1, . . ., M}, the input is x(i) = {x~l~(i), x~t~(i), x~c~(i), x~r~(i)}, where x~l~(i), x~t~(i), x~c~(i) and x~r~(i) denote linguistic, target, context and relation features. The authors purposefully omit index in the following, that is, x(i) is then written as x. More in detail, the input variables define:
   * **x~t~**: it is defined as the cropped image of the target
   * **x~c~:** it is a cropped image that characterizes a target and its neighborhood (context)
   * **x~l~:** it consists of sub-word vector embedding
   * **x~r~:** it is a vector characterizing the position of the target candidate in the environment.
-* **Linguistic Attention Branch (LAB):**  its purpose is to emphasize the most salient part of the linguistic features for instruction comprehension. The LAB module is composed by a implementation of BERT method for the sub-word embedding (extract the words internal structure). Subsequently, the multi-layer Bi-LSTM network is used to obtain a latent space representation of the extracted linguistic features. The last hidden states of each layer are concatenated to form *linguistic feature maps* f~l~, from which a linguistic attention mask is extracted. Feature maps f~l~ are processed through one-dimensional convolutional layers followed by a single fully connected layer (FC) The *linguistic attention map* a~l~ is obtained from the second convolutional layer that is convoluted with an additional layer and normalized by a sigmoid activation function. The output visual feature maps are then obtained using a masking process given by: o~l~ = a~l~  f~l~, where  denotes the Hadamard product.
+* **Linguistic Attention Branch (LAB):**  its purpose is to emphasize the most salient part of the linguistic features for instruction comprehension. The LAB module is composed by a implementation of the BERT method for the sub-word embedding (extract the words internal structure). Subsequently, the multi-layer Bi-LSTM network is used to obtain a latent space representation of the extracted linguistic features. The last hidden states of each layer are concatenated to form *linguistic feature maps* f~l~, from which a linguistic attention mask is extracted. Feature maps f~l~ are processed through one-dimensional convolutional layers followed by a single fully connected layer (FC) The *linguistic attention map* a~l~ is obtained from the second convolutional layer that is convoluted with an additional layer and normalized by a sigmoid activation function. The output visual feature maps are then obtained using a masking process given by: o~l~ = a~l~  f~l~, where  denotes the Hadamard product (takes two matrices of the same dimensions and produces another matrix of the same dimension as the operands where each element *i*, *j* is the product of elements *i*, *j* of the original two matrices).
+* **Target Attention Branch (TAB):** it produces an attention map for the candidate target images. The input x~t~ is transformed into a space feature f~t~ through a CNN, which is processed into FC layers. Even in this case, a visual attention map is extracted from the second FC layer that is processed in a parallel branch composed of a FC layer and a sigmoid activation function. Output latent space feature o~t~ is then obtained by o~t~ = a~t~  f~t~.
+* **Neighboring Context Attention Branch:  (nCAB):** it is one of the main novelties of the MTCM-AB. nCAB module adds an attention branch mechanism to focus on the relevant part of the image in the surroundings of a given target, in order to define context features. An extended cropped image (x~c~) is extracted from around the target. This input is encoded into feature maps f~c~ from a CNN feature extractor. The convolutional layers are followed by a global average pooling (GAP). In parallel, context attention map a~c~ is created from an additional convolution and sigmoid normalization of the third convolutional layer. The output context feature maps are given by o~c~ = a~c~  f~c~. 
+* **Perception Branch:** it is composed by a visual multi-layer perceptron (MLP), which encodes the concatenation of o~t~, o~v~ and x~r~. In parallel, a linguistic MLP encodes linguistic features o~l~. The source is predicted as y~src~ from a third MLP that combines the two previous MLP outputs.
+* **Loss Functions:** the MTCM-AB is trained by minimizing several embedding loss functions related to the different branches. In particular, it minimizes the global loss function J~total~ = λ~c~J~c~ + λ~t~J~t~ + λ~l~J~l~ + λ~p~J~p~ + λ~src~J~src~, where J~i~ is the loss function for the branch i and λ~i~ are loss weights that are defined in the experimental section.
 
 ![MTCM-AB architecture](images/MTMC-AB.gif)
 
+## Experiments
 
+The proposed method is evaluated over the PFN-PIC and WRS-PV datasets. The first contains 89,891 sentences in the training set and 898 sentences in the validation set to instruct 25,861 targets in the training set and 532 targets in the validation one. The latter, instead, has 308 images from which 2015 instructions in the training set and 74 instructions in the validation set. The experimental setup is summarized in the following figure. This configuration is used to train the model with the PFN-PIC dataset, while for the WRSPV dataset the learning rate was decreased to 5 × 10−5 and a batch size of 64.
+
+![MTCM-AB settings parameters](images/MTCMsettings.png)
+
+The input images were downscaled to 299 × 299 before being processed. The parameter δ~c~ represents the variation in size of the context input x~c~. x~c~ corresponds to the size of the cropped image target to which is added δ~c~ in width and height. The MTCM-AB had 27.5 M parameters.
+
+## Results
+
+### Quantitative results
+
+The *quantitative results* correspond to the accuracy obtained for the most likely target predicted, given an instruction. This metrics is also called *top-1 accuracy*. The authors report the performance variation with varying sizes of x~c~ by setting δ~c~ with a 0 to 150-pixel wise extension, to find the best value of δ~c~. These results are reported in the following figure. 
+
+![MTCM-AB accuracy with respect to δ~c~](images/MTCMresultssize.png)
+
+From δ~c~ analysis, the authors found its best value for the two datasets, which is, respectively, 50 and 75 pixels for the PFN-PIC and WRS-PV datasets. In addition, this analysis shows that the PFN-PIC dataset is highly cluttered with relatively small objects, because setting δ~c~ = [125, 150] causes lower accuracy than the configuration with δ~c~ = 0. The MTCM-AB method proposed in this work is compared with respect to other state-of-the-art models and human performance, which is considered as an upper bound. These confront models are the MTCM [1] and its baseline method explained in [7] by Hatori et al. The results, in terms of top-1 accuracy, are reported in the following figure.
+
+![Top-1 Accuracy on PFN-PIC and WRS-PV datasets](images/MTCMqualres.png)
+
+On PFN-PIC, the MTCM-AB outperformed the MTCM and baseline method by 1.3% and 2.1% respectively. The results of WRS-PV corroborated the trend observed on the PFN-PIC dataset. To characterize the contribution of each attention branch, the authors also report the results of an ablation study for the PFN-PIC dataset. These results, showed in the following figure, show that both linguistic and visual attention branches improved the prediction accuracy compared to the MTCM.
+
+![Ablanation study of the MTCM-AB for PFN-PIC dataset](images/MTCMablanation.png)
+
+### Qualitative Results
+
+In the following figure, the *qualitative results* are reported for the PFN-PIC dataset. In the first row, the prediction is given in blue while the ground truth is in green. The attended region of each context feature xc is given in the second row. The two first columns refer to correct predictions. The third column refers to an erroneous prediction (wrongly attended target), while the last column refers to an erroneous prediction due to incorrect ground truth ("brown pack" is instructed but "can" is given the label). The sentences are:
+
+- "*Take the blue sandal move it to lower left box*"
+- "*Take the green item next to the pair of white gloves and move it to top left box*"
+- "*Move the grey colored bottle at top left to box below*".
+- "*Pick the brown pack and put it in lower left box*"
+
+![Qualitative results for PFN-PIC dataset](images/MTMCqualres1.gif)
+
+Qualitative results on the WRS-PV dataset are analyzed in the same way. The three first samples illustrate correct predictions with consistent attended regions. The last sample, with the instruction "Take an apple on the same shelf that a coffee cup is placed" is erroneous and our model predicts the cup instead of the apple.
+
+![Qualitative results for WRS-PV dataset](images/MTMCqualres2.gif)
+
+### Error Analysis
+
+Analysing the MTCM-AB results, different failure cases can be observed:
+
+* **ES (erroneous sentence):** the ground truth does not correspond to the target specified in the instruction
+* **NE (negation):** the ground truth is specified from a negation sentence which is thought to be difficult to solve in NLP community
+* **REL (relation to landmark):** the ground truth is defined with respect to landmark objects and the predicted target position is incorrect with respect to this landmark
+* **RES (relation to source):** the ground truth target is defined with respect to a source and the predicted target position is incorrect with respect to this source
+* **SE (source error):** the instruction specifies a given source and the predicted target position is in a different source
+
+## Conclusions
+
+The MTCM-AB extends the MTCM, achieving higher accuracy. In addition, multimodal attention achieves higher accuracy than monomodal attention on linguistic or visual inputs.
 
 
 
