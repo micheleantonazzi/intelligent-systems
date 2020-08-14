@@ -198,36 +198,34 @@ The model has good performance, even when compared to those of humans. However, 
 
 ## Introduction
 
-Performing visual place recognition (VPR) reliably is a challenge for any robotic system or autonomous vehicle operating over long periods of time in real-world environments. Convolutional neural networks (CNN) have been applied to the field of VPR with great success, typically using dedicated hardware: the GPUs. However, classical CNNs neglect any temporal information between consecutive images. However, sequence-based algorithms, such as SeqSLAM, matching two or more sequences of images to perform VPR. There are two main deep learning models that can be used to capture sequence patterns: *computer-science-oriented* and *neuroscience-oriented* models. In recent researches, recurrent neural networks (RNN) are used to reproduce the multi-scale spatial representation of an environment. While the results are promising, these computer-science-oriented systems are tested only in small synthetic environments, and the integration with neuroscience-oriented recurrent models such as continuous attractor neural networks (CANN) is not well explored. An attractor network is a network of nodes (i.e. neurons), often recurrently connected, whose time dynamics settle to a stable pattern. A pattern can be stationary, time varying (i.e. cyclic) or chaotic. The particular pattern which network settles to is called its *attractor*. In neuroscience theory, different kinds of attractor neural networks have been associated with different functions, such as memory, motor behavior, and classification. More in detail, a continuous attractor network is a special type of attractor network, which models a non-linear dynamical system. A dynamical system consists in a *state place*, which its coordinates describe the state at any instance, and a *dynamical role* that specifies the immediate future of all state variables. For example the state of a pendulum is its angle and angular velocity, and the evolution rule is Newton's equation *F*=*m^a*. An *attractor* can be discrete (a discrete set of points) or continuous (a continuous object embedded in the state space).
+Performing visual place recognition (VPR) reliably is a challenge for any robotic system or autonomous vehicle operating over long periods in real-world environments. Convolutional neural networks (CNN) have been applied to the field of VPR with great success, typically using dedicated hardware: the GPUs. However, classical CNNs neglect any temporal information between consecutive images. However, sequence-based algorithms, such as SeqSLAM, matching two or more sequences of images to perform VPR. Two main deep learning models can be used to capture sequence patterns: *computer-science-oriented* and *neuroscience-oriented* models. In recent researches, recurrent neural networks (RNN) are used to reproduce the multi-scale spatial representation of an environment. While the results are promising, these computer-science-oriented systems are tested only in small synthetic environments, and the integration with neuroscience-oriented recurrent models such as continuous attractor neural networks (CANN) is not well explored. An attractor network is a network of nodes (i.e. neurons), often recurrently connected, whose time dynamics settle to a stable pattern. A pattern can be stationary, time-varying (i.e. cyclic), or chaotic. The particular pattern which network settles to is called its *attractor*. In neuroscience theory, different kinds of attractor neural networks have been associated with different functions, such as memory, motor behavior, and classification. More in detail, a continuous attractor network is a special type of attractor network, which models a non-linear dynamical system. A dynamical system consists of a *state place*, which its coordinates describe the state at any instance and a *dynamical role* that specifies the immediate future of all state variables. For example, the state of a pendulum is its angle and angular velocity, and the evolution rule is Newton's equation *F*=*m^a*. An *attractor* can be discrete (a discrete set of points) or continuous (a continuous object embedded in the state space).
 
 ![A system (the yellow ball) with a continuous attractor (the blue surface)](images/continuousattractor.jpg)
 
-In this work, the authors propose a hybrid neural network that incorporates both computer-science- and neuroscience-oriented models to perform VPR task. Their approach comprises two key components: FlyNet, a compact neural network, and a 1-d CANN as temporal model that encodes sequences of images to perform appearance-invariant VPR using real data. The resulting FlyNet+CANN model achieves competitive AUC results, but with far less parameters, minimal training time and smaller computational footprint than conventional deep learning and algorithmic-based approaches.
+In this work, the authors propose a hybrid neural network that incorporates both computer-science- and neuroscience-oriented models to perform the VPR task. Their approach comprises two key components: FlyNet, a compact neural network, and a 1-d CANN as a temporal model that encodes sequences of images to perform appearance-invariant VPR using real data. The resulting FlyNet+CANN model achieves competitive AUC results, but with far fewer parameters, minimal training time and smaller computational footprint than conventional deep learning and algorithmic-based approaches.
 
 ![FlyNet+CANN hybrid neural architecture](images/flynetcann.gif)
 
 ## Previous work
 
-To design deep-learning-based models for VPR it is necessary to explore how this activity is performed by mammalians' brain and take inspiration from it. RatSLAM is an example, this method perform visual SLAM implementing the mechanisms using by rodents' brain. Other models performs VPR following the insect brains, like ants, bees and flies, that exhibits great capacity to navigate. Place recognition in insects is, however, most likely mediated by processing within the *mushroom bodies* (MB), a pair of structure involved in classification, learning and recognition of both olfactory and visual information. Their structure has been similar to a multi-layer perceptron (MLP) network, which receive massive inputs signals from sensory lobes. These impressive capabilities, achieved with relatively small brains, make them attractive models for roboticists. For FlyNet, we take inspiration from algorithmic insights found in the fruit fly olfactory neural circuit. The authors investigate how it can be integrated with recurrent-based networks for VPR task. Classical CNN models for image recognition has good performance but they have also  undesirable characteristics. In fact, these networks are difficult to implement in real robot,due to their size and complexity. In contrast, the authors propose the usage of compact neural models such as FlyNet to alleviate these requirements. To access and exploit the power of temporal information in many applications, researchers have developed a range of RNN. Another approach, implementing by RatSLAM, uses incorporated multi-dimensional CANN models with pre-assigned weights and structure. There exist other non-neural techniques, like SeqSLAM, that match sequences of pre-processed frames to provide an estimate of place. In this work, the authors attempt to developing a new bio-inspired, hybrid neural network for VPR tasks based on insect brain architectures such as FlyNet, which is extremely compact and can incorporate the filtering capabilities of a 1-d CANN to achieve competitive localization results.
+To design deep-learning-based models for VPR it is necessary to explore how this activity is performed by mammalians' brains and take inspiration from it. RatSLAM is an example, this method performs visual SLAM implementing the mechanisms using by rodents' brain. Other models perform VPR following the insect brains, like ants, bees, and flies, that exhibits the great capacity to navigate. Place recognition in insects is, however, most likely mediated by processing within the *mushroom bodies* (MB), a pair of structures involved in classification, learning, and recognition of both olfactory and visual information. Their structure has been similar to a multi-layer perceptron (MLP) network, which receives massive input signals from sensory lobes. These impressive capabilities, achieved with relatively small brains, make them attractive models for roboticists. For FlyNet, we take inspiration from algorithmic insights found in the fruit fly olfactory neural circuit. The authors investigate how it can be integrated with recurrent-based networks for the VPR task. Classical CNN models for image recognition have good performance but they have also undesirable characteristics. In fact, these networks are difficult to implement in a real robot, due to their size and complexity. In contrast, the authors propose the usage of compact neural models such as FlyNet to alleviate these requirements. To access and exploit the power of temporal information in many applications, researchers have developed a range of RNN. Another approach, implementing by RatSLAM, uses incorporated multi-dimensional CANN models with pre-assigned weights and structure. There exist other non-neural techniques, like SeqSLAM, that match sequences of pre-processed frames to provide an estimate of place. In this work, the authors attempt to develop a new bio-inspired, hybrid neural network for VPR tasks based on insect brain architectures such as FlyNet, which is extremely compact and can incorporate the filtering capabilities of a 1-d CANN to achieve competitive localization results.
 
 ## Proposed method
 
 ### FlyNet algorithm
 
-The FlyNet proposed in this works is inspired by the *fly algorithm*. The Drosophila's small brain identifies odors by assigning similar neural activity patterns to similar input odors. The neural networks is composed by 4 layers (the input layer, two hidden layer and the output layer). The network works as follow. A binary, sparse random matrix (*random projection*) connects the input layer to the second layer: each neuron receives and sums about 10% of the input neurons. This mechanism is also used to connect the second and third layers, but the number of neurons in the third layer is the same as the output one. Finally, using a WTA (winner-take-all) circuit, the third layer's neurons are mapped to the output layer, setting the first 5% with the high value to 1 and the rest to 0. The input layer generate a specific binary identifier for the input odor. The *FlyNet Algorithm* (FNA) proposed in this work is a mapping of the fly algorithm for vision purpose. The only difference is the WTA circuit, which is set to consider true the first 50% of the neurons with the high neurons.
+The FlyNet proposed in this works is inspired by the *fly algorithm*. The Drosophila's small brain identifies odors by assigning similar neural activity patterns to similar input odors. The neural networks are composed of 4 layers (the input layer, two hidden layers, and the output layer). The network works as follows. A binary, sparse random matrix (*random projection*) connects the input layer to the second layer: each neuron receives and sums about 10% of the input neurons. This mechanism is also used to connect the second and third layers, but the number of neurons in the third layer is the same as the output one. Finally, using a WTA (winner-take-all) circuit, the third layer's neurons are mapped to the output layer, setting the first 5% with the high value to 1 and the rest to 0. The input layer generates a specific binary identifier for the input odor. The *FlyNet Algorithm* (FNA) proposed in this work is a mapping of the fly algorithm for vision purposes. The only difference is the WTA circuit, which is set to consider true the first 50% of the neurons with the high neurons.
 
 ![The fly algorithm's network architecture. The random projection is shown only for the connection between the two hidden layer, but all the input layer is connected to the first hidden layer using the same mechanism](images/fly.gif)
-
-The following table reports the compact version of the FNA, seen without the network model. 
 
 ### FlyNet models
 
 The authors implement a range of VPR models, using FNA and a module with temporal filtering capabilities. These networks models are the following:
 
-* **FlyNet:** it's composed by the FNA that terminates with a fully connected (FC) network. Its architecture is a three-layer MLP with 64–64–1000 units respectively, where the first two layer make up the FNA and the last one compose the FC network.
-* **FlyNet+SeqSLAM:** it incorporates the SeqSLAM algorithm on top of our single-frame FlyNet network. This model can be compared along with the other following temporal models.
-* **FlyNet+RNN:** It is a purely neural model that incorporates a RNN on top of FlyNet and terminates with another FC layer. Its architecture is the same as FlyNet (the FC layers have 100 units), with a 512 recurrent units. 
-* **FlyNet+CANN:** it incorporates a variation of the CANN architecture proposed in RatSLAM, which is a 1 dimensional model, on top of the FlyNet network. The CANN layer has 1002 units.
+- **FlyNet:** it's composed by the FNA that terminates with a fully connected (FC) network. Its architecture is a three-layer MLP with 64–64–1000 units respectively, where the first two layers make up the FNA and the last one composes the FC network.
+- **FlyNet+SeqSLAM:** it incorporates the SeqSLAM algorithm on top of our single-frame FlyNet network. This model can be compared along with the other following temporal models.
+- **FlyNet+RNN:** It is a purely neural model that incorporates an RNN on top of FlyNet and terminates with another FC layer. Its architecture is the same as FlyNet (the FC layers have 100 units), with 512 recurrent units. 
+- **FlyNet+CANN:** it incorporates a variation of the CANN architecture proposed in RatSLAM, which is a 1-dimensional model, on top of the FlyNet network. The CANN layer has 1002 units.
 
 ![FlyNet models](images/flynetmodels.gif)
 
@@ -239,15 +237,15 @@ To evaluate the capabilities of the proposed FlyNet-based models, the authors co
 
 ### Experiments evaluation
 
-The authors train and test the four FlyNet models in order to find the best model and compare it with other existing state-of-the-art techniques. In particular, these methods are *SeqSLAM* (withput FNA attacked), *LoST-X* and *Multi-Process Fusion*.  
+The authors train and test the four FlyNet models in order to find the best model and compare it with other existing state-of-the-art techniques. In particular, these methods are *SeqSLAM* (without FNA attacked), *LoST-X*, and *Multi-Process Fusion*. 
 
 #### Metrics
 
-VPR models' performance are evaluated using precision-recall (PR) curves and area under the curve (AUC) metrics. The tolerance used to consider a query place as a correct match is being within 20 frames around the ground truth location for the Nordland dataset, and up to 50 meters (10 frames) away from the ground truth for the Oxford RobotCar dataset. 
+VPR models' performance is evaluated using precision-recall (PR) curves and area under the curve (AUC) metrics. The tolerance used to consider a query place as a correct match is being within 20 frames around the ground truth location for the Nordland dataset, and up to 50 meters (10 frames) away from the ground truth for the Oxford RobotCar dataset. 
 
 #### Comparison of FlyNet to Other Neural Networks
 
-FlyNet (alone) is compared with other four singleframe models: a simple FC network, a FC network with dropout, a CNN and an implementation of NetVLAD method. The FC network has the same architecture as FlyNet: it is a three layer MLP with 64-64-1000 neurons respectively. The FC network with dropout is the same as the previous one, but with a dropout rate of 90% and 50% for the first and second layers, respectively, in order to approximate the FlyNet sparsity and for fair comparison purposes. The CNN model has 2 convolutional layers while the NetVLAD output representation dimensionality is reduced from 4096 to 64 to be comparable in size with the FlyNet. 
+FlyNet (alone) is compared with the other four single-frame models: a simple FC network, an FC network with dropout, a CNN, and an implementation of the NetVLAD method. The FC network has the same architecture as FlyNet: it is a three-layer MLP with 64-64-1000 neurons respectively. The FC network with dropout is the same as the previous one, but with a dropout rate of 90% and 50% for the first and second layers, respectively, in order to approximate the FlyNet sparsity and for fair comparison purposes. The CNN model has 2 convolutional layers while the NetVLAD output representation dimensionality is reduced from 4096 to 64 to be comparable in size with the FlyNet. 
 
 ## Experiments results
 
@@ -269,13 +267,13 @@ MPF is performing better while being able to recall almost all places at 100% pr
 
 ![AUC results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothers.gif)
 
-Similarly, PR performance on the Oxford RobotCar dataset is shown in the following figure. FlyNet+CANN not only achieves state-of-the-art results comparable with the other methods, but it maintains PR performance even under extreme environmental changes (e.g. overcast to night), as shown the the bottom-right side of the figure.
+Similarly, PR performance on the Oxford RobotCar dataset is shown in the following figure. FlyNet+CANN not only achieves state-of-the-art results comparable with the other methods, but it maintains PR performance even under extreme environmental changes (e.g. overcast to night), as shown the bottom-right side of the figure.
 
 ![PR results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothersPR.gif)
 
 ### Computational performance
 
-The processing time required to perform appearance-invariant VPR by our hybrid model is compared to those from state-of-theart methods in terms of running time for (1) feature extraction, (2) visual place matching between query and reference traverses, and (3) average place recognition time for a single query image from a 1000-image reference database. This Avg. Time (3) is calculated as (Feature Ext. (1) + Place Match. (2))/1000. Processing time results on the Nordland dataset are reported in the following table. The FlyNet+CANN can be up to 6.5, 310, and 1.5 times faster than MPF, LoST-X, and SeqSLAM, respectively.
+The processing time required to perform appearance-invariant VPR by our hybrid model is compared to those from state-of-the-art methods in terms of running time for (1) feature extraction, (2) visual place matching between query and reference traverses, and (3) average place recognition time for a single query image from a 1000-image reference database. This Avg. Time (3) is calculated as (Feature Ext. (1) + Place Match. (2))/1000. Processing time results on the Nordland dataset are reported in the following table. The FlyNet+CANN can be up to 6.5, 310, and 1.5 times faster than MPF, LoST-X, and SeqSLAM, respectively.
 
 | **Method**      | **Feature extraction** | **Place matching** | **Avg. time (fps)**  |
 | --------------- | ---------------------- | ------------------ | -------------------- |
@@ -284,13 +282,59 @@ The processing time required to perform appearance-invariant VPR by our hybrid m
 | LoST-X          | 110 min                | 200 min            | 18.6 sec (0.05)      |
 | SeqSLAM         | 50 sec                 | 40 sec             | 0.09 sec (11.11)     |
 
-The following figure shows the comparison between the networks' complexity and the results obtained, viewing the AUC metric for the most challenging appearance change (day to night). It is evident that the best model proposed in this works obtains the best results with the minimum number of parameters.
+The following figure shows the comparison between the networks' complexity and the results obtained, viewing the AUC metric for the most challenging appearance change (day to night). The best model proposed in this works obtains the best results with the minimum number of parameters.
 
 ![AUC perfoemance vs. network most challenging appearance change (day to night) ](images/flynetothermodeldimensions.gif)
 
 ## Conclusions
 
-FlyNet+CANN model achieves competitive visual localization results compared to existing deep learning and algorithmic-based VPR techniques, but with significantly fewer parameters, a smaller footprint and reduced processing time. The authors want to demonstrate that, taking inspiration from biological brain, it is possible to build sample-efficient, high-performing VPR models. FlyNet has the same number of layers and sparse structure found in the fly olfactory neural circuit. Despite the fly brains extend by forty times the dimensionality of the inputs, the authors  experimentally shown that also reducing this dimension the FlyNet training accuracy remained around 96%. At the same time, FlyNet+CANN enabled the use of a relatively low-performance but fast network to get better VPR results, which is also able to generalize across challenging environmental changes.
+FlyNet+CANN model achieves competitive visual localization results compared to existing deep learning and algorithmic-based VPR techniques, but with significantly fewer parameters, a smaller footprint, and reduced processing time. The authors want to demonstrate that, taking inspiration from the biological brain, it is possible to build sample-efficient, high-performing VPR models. FlyNet has the same number of layers and sparse structure found in the fly olfactory neural circuit. Despite the fly, brains extend by forty times the dimensionality of the inputs, the authors have experimentally shown that also reducing this dimension the FlyNet training accuracy remained around 96%. At the same time, FlyNet+CANN enabled the use of a relatively low-performance but fast network to get better VPR results, which is also able to generalize across challenging environmental changes.
+
+# A Multimodal Target-Source Classifier With Attention Branches to Understand Ambiguous Instructions for Fetching Daily Objects
+
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020*
+
+## Introduction
+
+In the last few years, the domestic service robots (DSRs) are become most popular: they have a lot of different and useful functions and they can help people with disabilities. Despite this, one of the main limitations of DSRs is their inability to naturally interact through natural language. This ability may be appreciated by non expert users. A particular task like various expressions relating to an object for fetching tasks. This work focuses on *multimodal language understanding for fetching instructions* (MLU-FI). This task consists of predicting a target instructed in natural language, such as "*Bring me the yellow box from the wooden cabinet.*". The purpose is understanding how extract instructions for robots from natural-language expressions. Natural language induces ambiguity because of the many-to-many mapping between the linguistic and physical world which makes it difficult to accurately infer the user’s intention. In this work, the authors propose the multimodal target-source classifier model with attention branch (MTCM-AB) which is an extension of the MTCM (proposed in [5]), with the addition of the attention branch network (ABN) explained in [6]. The MTCM module predict the region-wise likelihood of target and source candidates in the scene. Unlike other methods, MTCM can handle region-wise classification based on linguistic and visual features. The ABN is an image classifier, inspired by class activation mapping (CAM) structures, that generates attention maps. This line of research focuses on the production of image masks that, overlaid onto an image, highlight the most salient portions with respect to some given query or task. An attention map is an image with highlighted the salient regions of a given label. Multiple visual attention networks were also proposed in recent years for solving visual question answering. However, most of these approaches use only a single modality for attention: visual attention. By contrast, recent studies in multimodal language understanding have shown that both linguistic and visual attention are beneficial for the given task.
+
+## Problem definition
+
+Our aim is to predict a target referred by an initial instruction among a set of candidate targets in a visual scene. Instructions are not constrained which is more natural but increases the complexity of the comprehension task because users may use referring expressions to characterize a target. Examples of possible instruction can be: "*Take the Kleenex box and put it in the bottom right box*" or "*Go to the kitchen and take the tea bottle on the upper shelf*". To address the MLU-FI are considered:
+
+* **Input:** a fetching instruction as a sentence in addition to an image of the scene. 
+* **Output:** the most likely target-source pair. The terms target and source are defined as follows.  
+  * **Target:** a daily object (e.g. bottle or snacks) that a user intends the robot to fetch.
+  * **Source:** the origin of the target (e.g. desk or cabinet).
+
+The evaluation metric is the prediction accuracy over the top-1 target prediction. Ultimately this study does not focus on object detection. The authors suppose that the bounding boxes of the target and source are given in advance. The MTCM-AB is not specifically designed for a given scene or context. It is validated on two types of dataset, in real and simulated environments described below.
+
+* **Home Environment:** In this configuration, the exeperiments use a simulation-based dataset from the Partner Robot Challenge Virtual Space (WRS-PV). WRS-PV depicts home environments as represented in the figure below. The three-dimensional environments (Unity-based) are augmented to make them more realistic. In this environment, a targeted DSR, that is HSR (Human Support Robot), is able to freely navigate and manipulate objects. In this context, the MTCM-AB predicts the most likely target among several candidates.
+* **Pick-and-Place Scene:** the PFN-PIC [7] dataset is designed for pick-and-place tasks from an armed robot with a top-view camera. The scene consists of four boxes, in which several candidate targets (up to 40) are randomly placed.
+
+![Samples of the WRS-PV (left) and PFN-PIC datasets (right) where the source and target are given.](images/WRS-PVexample.gif)
+
+## Proposed method
+
+The proposed method consists of target prediction with respect to an instruction in natural language. The authors extend the MTCM [5] with a attention branch network (ABN, [6]) that are used to improve the prediction from the linguistic and visual inputs. In ABN, the class attention map (CAM) network is extended to produce an attention mask for improving image classification. The ABN is decomposed into parallel branches to avoid deteriorating the classifier accuracy (both of them are classifiers):
+
+* an attention branch that produces attention maps and
+* a prediction branch that predicts the likelihood of some label.
+
+The MTCM-AB module produced in this woork, similarly to the MTCM, predicts the target and source from the full sentence. This module is composed by a set of sub-modules: the Target Attention Branch (TAB), the neighboring Context Attention Branch (nCAB) and the Linguistic Attention Branch (LAB). The MTCM-AD architecture is explained in detail in the following line and the figure below is a visual representation of it. The MTCM module works as follow:
+
+* **Input:** for each target candidate i ∈ {1, . . ., N} and source i ∈ {1, . . ., M}, the input is x(i) = {x~l~(i), x~t~(i), x~c~(i), x~r~(i)}, where x~l~(i), x~t~(i), x~c~(i) and x~r~(i) denote linguistic, target, context and relation features. The authors purposefully omit index in the following, that is, x(i) is then written as x. More in detail, the input variables define:
+  * **x~t~**: it is defined as the cropped image of the target
+  * **x~c~:** it is a cropped image that characterizes a target and its neighborhood (context)
+  * **x~l~:** it consists of sub-word vector embedding
+  * **x~r~:** it is a vector characterizing the position of the target candidate in the environment.
+* **Linguistic Attention Branch (LAB):**  its purpose is to emphasize the most salient part of the linguistic features for instruction comprehension. The LAB module is composed by a implementation of BERT method for the sub-word embedding (extract the words internal structure). Subsequently, the multi-layer Bi-LSTM network is used to obtain a latent space representation of the extracted linguistic features. The last hidden states of each layer are concatenated to form *linguistic feature maps* f~l~, from which a linguistic attention mask is extracted. Feature maps f~l~ are processed through one-dimensional convolutional layers followed by a single fully connected layer (FC) The *linguistic attention map* a~l~ is obtained from the second convolutional layer that is convoluted with an additional layer and normalized by a sigmoid activation function. The output visual feature maps are then obtained using a masking process given by: o~l~ = a~l~  f~l~, where  denotes the Hadamard product.
+
+![MTCM-AB architecture](images/MTMC-AB.gif)
+
+
+
+
 
 # Bibliography
 
@@ -299,6 +343,14 @@ FlyNet+CANN model achieves competitive visual localization results compared to e
 [2] A. Giusti *et al*., "A Machine Learning Approach to Visual Perception of Forest Trails for Mobile Robots," in *IEEE Robotics and Automation Letters*, vol. 1, no. 2, pp. 661-667, July 2016, doi: 10.1109/LRA.2015.2509024.
 
 [3] P. Santana, L. Correia, R. Mendonça, N. Alves, and J. Barata, "Tracking natural trails with swarm-based visual saliency," J. Field Rob., vol. 30, no. 1, pp. 64–86, 2013.
+
+[4] M. Chancán, L. Hernandez-Nunez, A. Narendra, A. B. Barron and M. Milford, "A Hybrid Compact Neural Architecture for Visual Place Recognition," in *IEEE Robotics and Automation Letters*, vol. 5, no. 2, pp. 993-1000, April 2020, doi: 10.1109/LRA.2020.2967324.
+
+[5] A. Magassouba, K. Sugiura, A. Trinh Quoc, and H. Kawai, "Understanding natural language instructions for fetching daily objects using GAN-based multimodal target-source classification," IEEE Robot. Autom. Lett., vol. 4, no. 4, pp. 3884–3891, Oct. 2019.
+
+[6] H. Fukui, T. Hirakawa, T. Yamashita, and H. Fujiyoshi, "Attention branch network: Learning of attention mechanism for visual explanation" in Proc. CVPR, 2019, pp. 10 705–10 714.
+
+[7] J. Hatori et al., "Interactively picking real-world objects with unconstrained spoken language instructions" in Proc. IEEE ICRA, 2018, pp. 3774–3781.
 
 
 
