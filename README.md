@@ -393,6 +393,116 @@ The MTCM-AB extends the MTCM, achieving higher accuracy. In addition, multimodal
 
 
 
+# CNN Based Road User Detection Using the 3D Radar Cube
+
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020*
+
+## Introduction
+
+Radars are attractive sensors for intelligent vehicles as they are relatively robust to weather and lighting conditions (e.g. rain, snow, darkness) compared to camera and LIDAR sensors. They also have excellent range sensitivity and can measure radial object velocities directly using the Doppler effect.  A radar outputs a point-cloud of reflections called *radar targets* in every frame and each radar target has the following features: range *r* and azimuth *α*, radar cross section RCS (i.e. reflectivity), and the object’s radial speed *v~r~* relative to the ego-vehicle. The authors call these feature *target-level*. Many radar-based road user detection methods first cluster radar targets by their *target-level* features. Object detection and classification methods depend on the success of this initial classification step. Other methods explore using the *e low-level radar cube* given by early processing of the radar signal. The radar cube is a 3D data matrix with axes corresponding to range, azimuth, and velocity (also called Doppler). In contrast to the target-level data, the radar cube provides the complete speed distribution (i.e. Doppler vector) at multiple 2D range-azimuth locations. Such distributions can capture modulations of an object’s main velocity caused by its moving parts, e.g. swinging limbs or rotating wheels. In this work, the authors show that these data can be used as valuable features for object classification. The features derived from a 3D cube are called *low-level*. This work focus only on addressing moving road users. In *Prophet*, proposed in [10], radar targets are first clustered into objects by DBSCAN. Then, several cluster-wise features are extracted, e.g. the variance/mean of *v~r~* and *r*. The performance of various classifiers (Random Forest, Support Vector Machine (SVM), 1-layer Neural Network, etc.) were compared in a single-class (pedestrian) detection task. The Schumann method [11] also uses clusters calculated by DBSCAN as the base of a multi-class (car, pedestrian, group of pedestrians, cyclist, truck) detection, but extract different features, e.g. deviation and spread of α (azimuth). In this letter, the authors propose a radar-based, multi-class moving road user detection method, which exploits both expert knowledge at the *target-level* (accurate 2D location, addressed phase ambiguity), and *low-level* information from the full 3D radar cube rather than a 2D projection. The method's core is a Convolutional Neural Network (CNN) called Radar Target Classification Network (*RTCnet*). The inclusion of low-level data enables the classification of individual radar targets before any object clustering; the latter step can benefit from the obtained class scores.
+
+## Proposed method
+
+*RTCnet* classifies each target individually based on the fused low-level and target-level data. The network consists of three parts. The first encodes the data in spatial domains (range, azimuth) and grasps the surroundings’ Doppler distribution. The second is applied to this output to extract class information from the distribution of speed. Finally, the third part provides classifications scores by two fully connected layers (FC). The output is either multi-class (one score for each class) or binary. In the latter case, an ensemble voting step combines the result of several binary classifiers. A class-specific clustering step (i.e. the radar targets’ predicted class information is used) generates an object list output. The following figure shows an overview of our method. 
+
+![The proposed pipeline](images/pipelineoverview.gif)
+
+### Pre-Processing
+
+Every single frame of radar targets and a single frame of the radar cube (low-level data) is fetched and pre-processed. First, radar targets with low compensated (absolute) velocity are considered as static and are filtered out. Then, corresponding target-level and low-level radar data are connected. Next, we look up each remaining dynamic radar target, such as a grid cell in the radar cube based on their reported range, azimuth, and (relative) velocity (*r*, *α*, *v~r~*). Afterward, a 3D block of the radar cube is cropped around each radar target’s grid cell with radius in range/azimuth/Doppler dimensions (L, W, H).
+
+### Network
+
+The *RTCnet* structure can be seen in detail in the figure above. The network is composed of three modules:
+
+* **Down-Sample Range and Azimuth Dimensions:** it aims to encode the radar target’s spatial neighborhood’s Doppler distribution into a tensor without extension in range or azimuth. In other words, it transforms the 1 × W × L × H sized data to a C × 1 × 1 × H sized tensor (sizes are given as Channel × Azimuth × Range × Doppler), where C was chosen as 25. To do this, it contains two 3D convolutional layers (Conv) followed by two maxpool layers (MP).
+* **Process Doppler Dimension:** the aim of this module is to extract class information from the speed distribution around the target. It operates on the output of the first which is 25 × 1 × 1 × H. To do this, two 1D convolutions along the Doppler dimension are applied, each of them is followed by a maxpool layer. The output of this module is a 32 × 1 × 1 × H/8 block.
+* **Score Calculation:** The output of the second module is flattened and concatenated to the *target-level* features (*r*, *α*, *v~r~*, *RCS*) and used by this module. It uses two fully connected layers with 128 nodes each to provide scores. The output layer has either four nodes (one for each class) for multi-class classification or two for binary tasks.
+
+### Ensemble Classifying
+
+It is possible to train the third module to perform multi-class classification directly. It implements also an ensemble voting system of binary classifiers, in the case of the network has two output nodes. This module is trained as One-vs-All (OvA) and One-vs-One (OvO) binary classifiers for each class (e.g. car-vs-all) and pair of classes (e.g. car-vs-cyclist), 10 in total. 
+
+### Object Clustering
+
+To obtain proposals for object detection, the authors cluster the classified radar targets with DBSCAN incorporating the predicted class information. The radar targets with bike/pedestrian/car predicted labels are clustered in separate steps. As a metric, we used a spatial threshold *γ~xy~* on the Euclidean distance in the x, y space, and a separate speed threshold *γ~v~* in velocity dimension. The advantage of clustering each class separately is that no universal parameter set is needed for DBSCAN. The authors use different parameters for different classes, e.g. larger radius for cars and small ones for pedestrians. Furthermore, swapping the clustering and classification step makes it possible to consider objects with a single reflection. The following figure reports three challenging cases  for the cluster classification:
+
+* **A:** objects may be clustered together (red circle)
+* **B:** large objects may be split up into several clusters
+* **C:** object with only one reflection
+
+![](images/clusteringdiff.gif)
+
+To address this, the method performs a filtering on the produced object proposals, calculating their spatial, velocity, and class score distribution distances. If two clusters have different classes and are close enough in all dimensions, they are merged the smaller class to the larger (i.e. pedestrians to cyclists and cars, cyclists to cars).
+
+### Dataset
+
+The dataset is obtained in the real-world with a demonstration vehicle during a time of an hour. There are recorded both the target-level and low-level output of our radar, the output of a stereo camera (1936 × 1216 px), and the vehicle’s odometry (filtered location and ego-speed). Annotation was fetched automatically from the camera sensor using the Single Shot Multibox Detector (SSD) [9]. Then, the mislabeled ground truth are corrected manually. To further extend the training dataset, the authors augmented the data by mirroring the radar frames and adding a zero-mean, 0.05 std Gaussian noise to the normalized *r* and *v~r~* features. Training and testing sets are from two independent driving (33 and 31 minutes long) which took place on different days and routes. The validation set is a 10% split of training dataset after shuffling.
+
+## Experiments
+
+The proposed method is tested in two different experiments:
+
+* **Experiment 1:** the classification task's performances are examined. As target-wise metric, a true positive is a correctly classified target. For cluster-wise methods, the predicted label of a cluster is assigned to each radar target inside it. Furthermore, the authors also performed an ablation study to see how different features benefit the method. *RTCnet (no ensemble)* is a single, multi-class network to see if ensembling is beneficial. *RTCnet (no RCS)* is identical to RTCnet, but the RCS target-level feature is removed to examine its importance. Similarly, in *RTCnet (no speed)* the absolute speed of the targets is unknown to the networks, only the relative speed distribution (in the low-level data) is given. Finally, *RTCnet (no low-level)* is a significantly modified version as it only uses target-level features.
+
+* **Experiment 2:** this experiment consists of comparing the methods in object detection task, examining the entire pipeline. Predictions and annotations are compared by their intersection and union calculated in number of targets. A true positive is a prediction which has an Intersection Over Union (IoU) bigger than or equal to 0.5 with an annotated object. Further detections of the same ground truth object count as false positives. To better understand this metric, see the figure below.
+
+  ![Object-level metric. Intersection / Union ≥ 0.5 counts as a true positive. In this example, there is a true positive cyclist and a false positive pedestrian detection.](images/iuo.gif)
+
+We selected Schumann [11] as a baseline because it is the only multi-object, multi-class detection method found with small latency. Also, *Prophet* [1] is selected as a baseline. Since the DBSCAN parameters are sensor-specific, the following table shows the optimal parameters for the two baselines and for the class-specific clusters. Both baselines method has the parameter *v~min~*, used to find the static radar targets.
+
+| **Method**               | ***γ~xy~*** | ***γ~v~***  | ***Min Points*** | ***v~min~*** |
+| ------------------------ | ----------- | ----------- | ---------------- | ------------ |
+| *Prophet*                | 1.2 *m*     | 1.3 *m / s* | 2                | 0.4 *m / s*  |
+| *Schumann*               | 1.3 *m*     | 1.4 *m / s* | 2                | 0.4 *m / s*  |
+| Class specific: peds.    | 0.5 *m*     | 2.0 *m / s* | 1                | -            |
+| Class specific: cyclists | 1.6 *m*     | 1.5 *m / s* | 2                | -            |
+| Class specific: cars     | 4.0 *m*     | 1.0 *m / s* | 3                | -            |
+
+For two baselines, the classifiers consists of a Random Forest with 50 trees. The size of the cropped block are set to L = W = 5, H = 32. The speed threshold to filter out static objects is a sensor-specific parameter and was set to 0.3 *m / s* based on empirical evidence. The thresholds to merge clusters during object clustering were set to 1 m spatially, 0.6 for scores, 2 *m / s* for pedestrian to cyclist, and 1.2 *m / s* for pedestrian/cyclist to car merges. The input data are normalized to be zero-mean and have a standard deviation of 1.
+
+## Results
+
+### Experiments results
+
+The results of *experiment 1* (target classification) are presented in the following table.
+
+| **Method**              | **Pedestrian** | **Cyclist** | **Car**  | **Other** | **Avg**  |
+| ----------------------- | -------------- | ----------- | -------- | --------- | -------- |
+| *Prophet*               | 0.61           | 0.58        | 0.34     | 0.91      | 0.61     |
+| *Schumann*              | 0.67           | **0.68**    | 0.46     | **0.92**  | 0.68     |
+| *RTCnet (no low-level)* | 0.56           | 0.63        | 0.33     | 0.90      | 0.61     |
+| *RTCnet (no speed)*     | 0.66           | 0.63        | 0.36     | 0.91      | 0.64     |
+| *RTCnet (no RCS)*       | **0.71**       | 0.66        | 0.48     | 0.91      | 0.69     |
+| *RTCnet (no ensemble)*  | 0.67           | 0.65        | 0.47     | 0.89      | 0.67     |
+| *RTCnet*                | **0.71**       | 0.67        | **0.50** | **0.92**  | **0.70** |
+
+*RTCnet* outperformed the two cluster-wise baselines reaching an average score of 0.70. *Schumann* has slightly better results on cyclists than*RTCnet* (0.68 vs 0.67) but performs significantly worse on pedestrians (0.67 vs 0.71) and cars (0.46. vs 0.50). The ablation study showed that removing each feature yields worse results than the complete pipeline, with the exception of *RTCnet (no RCS)* which has an average of 0.69. The results also show that classification performance changes over the distance from the target object and the vehicle, based on the number of samples in the training set. The figure below shows this fact.
+
+![Target-wise scores (lines) and number of targets in training set (bars) in function of distance from vehicle](images/resultsdistance.gif)
+
+For *experiment 2* (object detection), the results are shown in the following table.
+
+| **Method** | **Pedestrian** | **Cyclist** | **Cars** | **Avg.** |
+| ---------- | -------------- | ----------- | -------- | -------- |
+| *Prophet*  | 0.48           | 0.50        | 0.23     | 0.40     |
+| *Schumann* | 0.54           | **0.60**    | 0.31     | 0.48     |
+| *RTCnet*   | **0.61**       | 0.59        | **0.47** | **0.56** |
+
+*RTCnet* reached slightly worse results on cyclists than *Schumann* (0.59 vs 0.60), but significantly outperformed it on pedestrians (0.61 vs 0.54), cars (0.47 vs 0.31), and in average (0.56 vs 0.48). 
+
+### Discussion
+
+The proposed method outperformed the baselines in target classification mainly due to two reasons. First, the classification does not depend on a clustering step. This allows us to handle objects that contain a single radar target (a common occurrence, especially for pedestrians) and mitigates the difficult cases shows in the figure above. Second, the method uses the low-level radar data, which brings the information of the speed distribution around the radar target. To demonstrate that this inclusion is beneficial, the authors show that only using target-level data and only the third module of the network (*RTCnet (no low-level)*) caused a significant drop in performance from 0.70 to 0.61 average score. The results of RTCnet (no low-level) and RTCnet (no speed) prove that the relative velocity distribution (i.e. the low-level radar data) indeed contains valuable class information. Despite the radar's performances are uniform in darkness/shadows/bright environments, its typical errors are shown in the following figure. Radar is easily reflected by flat surfaces (e.g. side of cars) acting like mirrors, creating ghost targets. 
+
+![Examples of radar targets misclassified by RTCnet](images/rtcnetfails.gif)
+
+The combination of the proposed network and the clustering step outperformed the baseline methods in the object detection task. This is mainly because by swapping the clustering and classifying steps, classes can be clustered with different parameters. This is mainly because by swapping the clustering and classifying steps, classes can be clustered with different and more appropriate parameters.
+
+## Conclusions
+
+In extensive experiments on a real-life dataset, the authors showed that the proposed method improves upon the baselines in target-wise classification by reaching an average score of 0.70 (vs. 0.68 *Schumann*). Furthermore, the importance of low-level features and ensembling in an ablation study is demonstrated. Furthermore, the authors show that the proposed method outperforms the baselines overall in object-wise classification by yielding an average score of 0.56 (vs. 0.48 *Schumann*).
+
 # Bibliography
 
 [1] Niko Sünderhauf, Oliver Brock, Walter Scheirer, Raia Hadsell, Dieter Fox, Jürgen Leitner, Ben Upcroft, Pieter Abbeel, Wolfram Burgard, Michael Milford, Peter Corke, "The Limits and Potentials of Deep Learning for Robotics", eprint arXiv:1804.06557, April 2018
@@ -405,9 +515,17 @@ The MTCM-AB extends the MTCM, achieving higher accuracy. In addition, multimodal
 
 [5] A. Magassouba, K. Sugiura, A. Trinh Quoc, and H. Kawai, "Understanding natural language instructions for fetching daily objects using GAN-based multimodal target-source classification," IEEE Robot. Autom. Lett., vol. 4, no. 4, pp. 3884–3891, Oct. 2019.
 
-[6] H. Fukui, T. Hirakawa, T. Yamashita, and H. Fujiyoshi, "Attention branch network: Learning of attention mechanism for visual explanation" in Proc. CVPR, 2019, pp. 10 705–10 714.
+[6] H. Fukui, T. Hirakawa, T. Yamashita, and H. Fujiyoshi, "Attention branch network: Learning of attention mechanism for visual explanation," in Proc. CVPR, 2019, pp. 10 705–10 714.
 
-[7] J. Hatori et al., "Interactively picking real-world objects with unconstrained spoken language instructions" in Proc. IEEE ICRA, 2018, pp. 3774–3781.
+[7] J. Hatori et al., "Interactively picking real-world objects with unconstrained spoken language instructions," in Proc. IEEE ICRA, 2018, pp. 3774–3781.
+
+[8] A. Palffy, J. Dong, J. F. P. Kooij and D. M. Gavrila, "CNN Based Road User Detection Using the 3D Radar Cube," in *IEEE Robotics and Automation Letters*, vol. 5, no. 2, pp. 1263-1270, April 2020, doi: 10.1109/LRA.2020.2967272. 
+
+[9] W. Liu et al., "SSD: Single shot multibox detector," Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics), vol. 9905 LNCS, pp. 21–37, 2016.
+
+[10] R. Prophet et al., “Pedestrian classification with a 79 GHz automotive radar sensor,” in Proc. 19th Int. Radar Symp., 2018, pp. 1–6.
+
+[11] O. Schumann, M. Hahn, J. Dickmann, and C. Wöhler, "Comparison of random forest and long short-term memory network performances in classification tasks using radar," in Proc. Sensor Data Fusion: Trends, Solutions, Appl., 2017, pp. 1–6.
 
 
 
