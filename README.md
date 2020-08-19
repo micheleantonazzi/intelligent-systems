@@ -153,19 +153,19 @@ This article studies the problem of perceiving forest or mountain trails from a 
 
 The robot consists of a MAV with a monocular camera, fixed in front of it. The drone flies with a height similar to the average height of a person (approximately 1.7 meters). The input is an image acquired by the camera. The main goal is to remain on the trail analyzing the image using a deep learning module. There are considered three different classes which correspond to three different actions that the robot should implement in order to remain on the trail:
 
-- **Turn Left (TL):** if −90◦ < α < −β; the trail is heading towards the left part of the image
-- **Go Straight (GS):** if −β ≤ α < +β; the trail is heading straight ahead, at least in the close range
-- **Turn Right (TR):** if +β ≤ α < +90◦; the trail is heading towards the right part of the image
+- **Turn Left (TL):** if $−90^{\circ} < \alpha < −\beta$; the trail is heading towards the left part of the image
+- **Go Straight (GS):** if $−\beta \leq \alpha < +\beta$; the trail is heading straight ahead, at least in the close range
+- **Turn Right (TR):** if $+\beta \leq α < +90^{\circ}$; the trail is heading towards the right part of the image
 
-With β = 15◦. 
+With $\beta = 15^{\circ}$. 
 
 ### Dataset
 
-Recognize a trail is a very hard task and the learning machine needs a large and well-formed dataset to perform this task effectively. Such a dataset does not exist and the authors had to create it from scratch. A hiker was equipped with three head-mounted cameras: one pointing 30◦ to the left, one pointing straight ahead, and one pointing 30◦ to the right. The fields of view of the three cameras partially overlap and cover approximately 180 degrees. The hiker then swiftly walks a long trail, by taking care of always looking straight along its direction of motion. The dataset is composed of the images acquired by the three cameras, labeled as follows: all images acquired by the central camera are of class GS, those acquired by the right camera are of class TL and the others (acquired by the left camera) make up the TR class. The dataset is composed of 8 hours of 1920 × 1080 30fps video acquired using three GoPro Hero3 Silver cameras and covers approximately 7 kilometers of hiking trails acquired at altitudes ranging from 300 m to 1200 m, different times of the day and weather. The dataset has been split into disjoint training (17,119 frames) and testing (7,355 frames) sets.
+Recognize a trail is a very hard task and the learning machine needs a large and well-formed dataset to perform this task effectively. Such a dataset does not exist and the authors had to create it from scratch. A hiker was equipped with three head-mounted cameras: one pointing 30◦ to the left, one pointing straight ahead, and one pointing $30^{\circ}$ to the right. The fields of view of the three cameras partially overlap and cover approximately 180 degrees. The hiker then swiftly walks a long trail, by taking care of always looking straight along its direction of motion. The dataset is composed of the images acquired by the three cameras, labeled as follows: all images acquired by the central camera are of class GS, those acquired by the right camera are of class TL and the others (acquired by the left camera) make up the TR class. The dataset is composed of 8 hours of 1920 × 1080 30fps video acquired using three GoPro Hero3 Silver cameras and covers approximately 7 kilometers of hiking trails acquired at altitudes ranging from 300 m to 1200 m, different times of the day and weather. The dataset has been split into disjoint training (17,119 frames) and testing (7,355 frames) sets.
 
 ### Deep neural network
 
-The authors implement the trail perception module as DNN (deep neural network), which is a feed-forward network built using successive pairs of convolutional and max-pooling layers, followed by several fully connected layers. To improve the network performances, the training set is augmented by synthesizing left/right mirrored versions of each training image. Additionally, mild affine distortions (±10% translation, ±15◦ rotation, ±10% scaling) are applied to training images to further increase the number of samples. The DNN is trained using backpropagation for 90 epochs, with a learning rate initially set to 0.005, then scaled by a factor of 0.95 per epoch. The free parameters (weights) are initialized with random numbers from a uniform distribution in the range [−0.05, 0.05] and they are optimized using stochastic gradient descent. The network has an input layer formed by a matrix of 3 × 101 × 101 neurons. To fit with the input layer, the images are first anisotropically resized (with an anti-aliasing technique) to a size of 101 × 101 pixels. The pixels intensity are rescaled to the range [-1, +1]. The DNN's output layer has 3 neurons, one for each of the three classes TL, TR, GS.
+The authors implement the trail perception module as DNN (deep neural network), which is a feed-forward network built using successive pairs of convolutional and max-pooling layers, followed by several fully connected layers. To improve the network performances, the training set is augmented by synthesizing left/right mirrored versions of each training image. Additionally, mild affine distortions ($\pm10\%$ translation, $\pm5^{\circ}$ rotation, $\pm10\%$ scaling) are applied to training images to further increase the number of samples. The DNN is trained using backpropagation for 90 epochs, with a learning rate initially set to 0.005, then scaled by a factor of 0.95 per epoch. The free parameters (weights) are initialized with random numbers from a uniform distribution in the range $[−0.05, 0.05]$ and they are optimized using stochastic gradient descent. The network has an input layer formed by a matrix of 3 × 101 × 101 neurons. To fit with the input layer, the images are first anisotropically resized (with an anti-aliasing technique) to a size of 101 × 101 pixels. The pixels intensity are rescaled to the range $[-1, +1]$. The DNN's output layer has 3 neurons, one for each of the three classes TL, TR, GS.
 
 ### Experimental results
 
@@ -306,7 +306,7 @@ The aim is to predict a target referred by an initial instruction among a set of
 
 - **Output:** the most likely target-source pair. The terms target and source are defined as follows. 
 
-- - **Target:** a daily object (e.g. bottle or snacks) that a user intends the robot to fetch.
+  - **Target:** a daily object (e.g. bottle or snacks) that a user intends the robot to fetch.
   - **Source:** the origin of the target (e.g. desk or cabinet).
 
 The evaluation metric is the prediction accuracy over the top-1 target prediction. Ultimately this study does not focus on object detection. The authors suppose that the bounding boxes of the target and source are given in advance. The MTCM-AB is not specifically designed for a given scene or context. It is validated on two types of datasets, in real and simulated environments described below.
@@ -325,16 +325,34 @@ The proposed method consists of target prediction with respect to instruction in
 
 The MTCM-AB module produced in this work, similarly to the MTCM, predicts the target and source from the full sentence. This module is composed of a set of sub-modules: the Target Attention Branch (TAB), the neighboring Context Attention Branch (nCAB), and the Linguistic Attention Branch (LAB). The MTCM-AD architecture is explained in detail in the following line and the figure below is a visual representation of it. The MTCM module works as follow:
 
-* **Input:** for each target candidate i ∈ {1, . . ., N} and source i ∈ {1, . . ., M}, the input is x(i) = {x~l~(i), x~t~(i), x~c~(i), x~r~(i)}, where x~l~(i), x~t~(i), x~c~(i) and x~r~(i) denote linguistic, target, context and relation features. The authors purposefully omit index in the following, that is, x(i) is then written as x. More in detail, the input variables define:
-  * **x~t~**: it is defined as the cropped image of the target
-  * **x~c~:** it is a cropped image that characterizes a target and its neighborhood (context)
-  * **x~l~:** it consists of sub-word vector embedding
-  * **x~r~:** it is a vector characterizing the position of the target candidate in the environment.
-* **Linguistic Attention Branch (LAB):**  its purpose is to emphasize the most salient part of the linguistic features for instruction comprehension. The LAB module is composed by a implementation of the BERT method for the sub-word embedding (extract the words internal structure). Subsequently, the multi-layer Bi-LSTM network is used to obtain a latent space representation of the extracted linguistic features. The last hidden states of each layer are concatenated to form *linguistic feature maps* f~l~, from which a linguistic attention mask is extracted. Feature maps f~l~ are processed through one-dimensional convolutional layers followed by a single fully connected layer (FC) The *linguistic attention map* a~l~ is obtained from the second convolutional layer that is convoluted with an additional layer and normalized by a sigmoid activation function. The output visual feature maps are then obtained using a masking process given by: o~l~ = a~l~  f~l~, where  denotes the Hadamard product (takes two matrices of the same dimensions and produces another matrix of the same dimension as the operands where each element *i*, *j* is the product of elements *i*, *j* of the original two matrices).
-* **Target Attention Branch (TAB):** it produces an attention map for the candidate target images. The input x~t~ is transformed into a space feature f~t~ through a CNN, which is processed into FC layers. Even in this case, a visual attention map is extracted from the second FC layer that is processed in a parallel branch composed of a FC layer and a sigmoid activation function. Output latent space feature o~t~ is then obtained by o~t~ = a~t~  f~t~.
-* **Neighboring Context Attention Branch:  (nCAB):** it is one of the main novelties of the MTCM-AB. nCAB module adds an attention branch mechanism to focus on the relevant part of the image in the surroundings of a given target, in order to define context features. An extended cropped image (x~c~) is extracted from around the target. This input is encoded into feature maps f~c~ from a CNN feature extractor. The convolutional layers are followed by a global average pooling (GAP). In parallel, context attention map a~c~ is created from an additional convolution and sigmoid normalization of the third convolutional layer. The output context feature maps are given by o~c~ = a~c~  f~c~. 
-* **Perception Branch:** it is composed by a visual multi-layer perceptron (MLP), which encodes the concatenation of o~t~, o~v~ and x~r~. In parallel, a linguistic MLP encodes linguistic features o~l~. The source is predicted as y~src~ from a third MLP that combines the two previous MLP outputs.
-* **Loss Functions:** the MTCM-AB is trained by minimizing several embedding loss functions related to the different branches. In particular, it minimizes the global loss function J~total~ = λ~c~J~c~ + λ~t~J~t~ + λ~l~J~l~ + λ~p~J~p~ + λ~src~J~src~, where J~i~ is the loss function for the branch i and λ~i~ are loss weights that are defined in the experimental section.
+* **Input:** for each target candidate $i \in \{1, . . ., N\}$ and source $i^{'} \in \{1, . . ., M\}$, the input is 
+
+  $\begin{equation*} {\bf x}(i)=\lbrace {\bf x}_{l}(i), {\bf x}_{t} (i), {\bf x}_{c} (i), {\bf x}_{r} (i) \rbrace, \end{equation*}$ 
+
+  where ${\bf x}_l(i)$, ${\bf x}_t(i)$, ${\bf x}_c(i)$ and ${\bf x}_r(i)$ denote linguistic, target, context and relation features. The authors purposefully omit index in the following, that is, ${\bf x}(i)$ is then written as ${\bf x}$. More in detail, the input variables define:
+
+  * ${\bf x}_t(i)$: it is defined as the cropped image of the target
+  * ${\bf x}_c(i)$: it is a cropped image that characterizes a target and its neighborhood (context)
+  * ${\bf x}_c(l)$: it consists of sub-word vector embedding
+  * ${\bf x}_r(i)$: it is a vector characterizing the position of the target candidate in the environment.
+
+* **Linguistic Attention Branch (LAB):**  its purpose is to emphasize the most salient part of the linguistic features for instruction comprehension. The LAB module is composed by a implementation of the BERT method for the sub-word embedding (extract the words internal structure). Subsequently, the multi-layer Bi-LSTM network is used to obtain a latent space representation of the extracted linguistic features. The last hidden states of each layer are concatenated to form *linguistic feature maps* f~l~, from which a linguistic attention mask is extracted. Feature maps f~l~ are processed through one-dimensional convolutional layers followed by a single fully connected layer (FC) The *linguistic attention map* a~l~ is obtained from the second convolutional layer that is convoluted with an additional layer and normalized by a sigmoid activation function. The output visual feature maps are then obtained using a masking process given by
+
+  $\begin{equation*} {\bf o}_{l}= {\bf a}_l \odot {\bf f}_{l} \end{equation*}$
+
+  where $\odot$ denotes the Hadamard product (takes two matrices of the same dimensions and produces another matrix of the same dimension as the operands where each element $i, j$ is the product of elements $i, j$ of the original two matrices).
+
+* **Target Attention Branch (TAB):** it produces an attention map for the candidate target images. The input ${\bf{x}_t}$ is transformed into a space feature ${\bf{f}_t}$ through a CNN, which is processed into FC layers. Even in this case, a visual attention map is extracted from the second FC layer that is processed in a parallel branch composed of a FC layer and a sigmoid activation function. Output latent space feature o~t~ is then obtained by 
+
+  $\begin{equation*} {\bf o}_{t}= {\bf a}_t \odot {\bf f}_{t}. \end{equation*}$
+
+* **Neighboring Context Attention Branch:  (nCAB):** it is one of the main novelties of the MTCM-AB. nCAB module adds an attention branch mechanism to focus on the relevant part of the image in the surroundings of a given target, in order to define context features. An extended cropped image (${\bf x}_c$) is extracted from around the target. This input is encoded into feature maps ${\bf{f}_c}$ from a CNN feature extractor. The convolutional layers are followed by a global average pooling (GAP). In parallel, context attention map a~c~ is created from an additional convolution and sigmoid normalization of the third convolutional layer. The output context feature maps are given by 
+
+  $\begin{equation*} {\bf o}_{c}= {\bf a}_{c} \odot {\bf f}_{c}. \end{equation*}$
+
+* **Perception Branch:** it is composed by a visual multi-layer perceptron (MLP), which encodes the concatenation of ${\bf{o}_t}$, ${\bf{o}_v}$ and ${\bf{x}_r}$. In parallel, a linguistic MLP encodes linguistic features ${\bf{o}_l}$. The source is predicted as ${\bf{J}_{src}}$ from a third MLP that combines the two previous MLP outputs.
+
+* **Loss Functions:** the MTCM-AB is trained by minimizing several embedding loss functions related to the different branches. In particular, it minimizes the global loss function $J_{total} = \lambda_cJ_c + \lambda_tJ_t + \lambda_lJ_l + \lambda_pJ_p + \lambda_{src}J_{src}$, where J~i~ is the loss function for the branch i and $\lambda_i$ are loss weights that are defined in the experimental section.
 
 ![MTCM-AB architecture](images/MTMC-AB.gif)
 
@@ -344,17 +362,17 @@ The proposed method is evaluated over the PFN-PIC and WRS-PV datasets. The first
 
 ![MTCM-AB settings parameters](images/MTCMsettings.png)
 
-The input images were downscaled to 299 × 299 before being processed. The parameter δ~c~ represents the variation in size of the context input x~c~. x~c~ corresponds to the size of the cropped image target to which is added δ~c~ in width and height. The MTCM-AB had 27.5 M parameters.
+The input images were downscaled to 299 × 299 before being processed. The parameter $\delta_c$ represents the variation in size of the context input ${\bf x}_c$. It corresponds to the size of the cropped image target to which is added $\delta_c$ in width and height. The MTCM-AB had 27.5 M parameters.
 
 ## Results
 
 ### Quantitative results
 
-The *quantitative results* correspond to the accuracy obtained for the most likely target predicted, given an instruction. This metrics is also called *top-1 accuracy*. The authors report the performance variation with varying sizes of x~c~ by setting δ~c~ with a 0 to 150-pixel wise extension, to find the best value of δ~c~. These results are reported in the following figure. 
+The *quantitative results* correspond to the accuracy obtained for the most likely target predicted, given an instruction. This metrics is also called *top-1 accuracy*. The authors report the performance variation with varying sizes of ${\bf x}_c$ by setting $\delta_c$ with a 0 to 150-pixel wise extension, to find the best value of.  $\delta_c$These results are reported in the following figure. 
 
 ![MTCM-AB accuracy with respect to δ~c~](images/MTCMresultssize.png)
 
-From δ~c~ analysis, the authors found its best value for the two datasets, which is, respectively, 50 and 75 pixels for the PFN-PIC and WRS-PV datasets. In addition, this analysis shows that the PFN-PIC dataset is highly cluttered with relatively small objects, because setting δ~c~ = [125, 150] causes lower accuracy than the configuration with δ~c~ = 0. The MTCM-AB method proposed in this work is compared with respect to other state-of-the-art models and human performance, which is considered as an upper bound. These confront models are the MTCM [1] and its baseline method explained in [7] by Hatori et al. The results, in terms of top-1 accuracy, are reported in the following figure.
+From $\delta_c$ analysis, the authors found its best value for the two datasets, which is, respectively, 50 and 75 pixels for the PFN-PIC and WRS-PV datasets. In addition, this analysis shows that the PFN-PIC dataset is highly cluttered with relatively small objects, because setting $\delta_c = [125, 150]$ causes lower accuracy than the configuration with $\delta_c = 0$. The MTCM-AB method proposed in this work is compared with respect to other state-of-the-art models and human performance, which is considered as an upper bound. These confront models are the MTCM [1] and its baseline method explained in [7] by Hatori et al. The results, in terms of top-1 accuracy, are reported in the following figure.
 
 ![Top-1 Accuracy on PFN-PIC and WRS-PV datasets](images/MTCMqualres.png)
 
@@ -364,7 +382,7 @@ On PFN-PIC, the MTCM-AB outperformed the MTCM and baseline method by 1.3% and 2.
 
 ### Qualitative Results
 
-In the following figure, the *qualitative results* are reported for the PFN-PIC dataset. In the first row, the prediction is given in blue while the ground truth is in green. The attended region of each context feature xc is given in the second row. The two first columns refer to correct predictions. The third column refers to an erroneous prediction (wrongly attended target), while the last column refers to an erroneous prediction due to incorrect ground truth ("brown pack" is instructed but "can" is given the label). The sentences are:
+In the following figure, the *qualitative results* are reported for the PFN-PIC dataset. In the first row, the prediction is given in blue while the ground truth is in green. The attended region of each context feature ${\bf x}_c$ is given in the second row. The two first columns refer to correct predictions. The third column refers to an erroneous prediction (wrongly attended target), while the last column refers to an erroneous prediction due to incorrect ground truth ("brown pack" is instructed but "can" is given the label). The sentences are:
 
 - "*Take the blue sandal move it to lower left box*"
 - "*Take the green item next to the pair of white gloves and move it to top left box*"
@@ -391,15 +409,13 @@ Analysing the MTCM-AB results, different failure cases can be observed:
 
 The MTCM-AB extends the MTCM, achieving higher accuracy. In addition, multimodal attention achieves higher accuracy than monomodal attention on linguistic or visual inputs.
 
-
-
 # CNN Based Road User Detection Using the 3D Radar Cube
 
 *IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020*
 
 ## Introduction
 
-Radars are attractive sensors for intelligent vehicles as they are relatively robust to weather and lighting conditions (e.g. rain, snow, darkness) compared to camera and LIDAR sensors. They also have excellent range sensitivity and can measure radial object velocities directly using the Doppler effect.  A radar outputs a point-cloud of reflections called *radar targets* in every frame and each radar target has the following features: range *r* and azimuth *α*, radar cross section RCS (i.e. reflectivity), and the object’s radial speed *v~r~* relative to the ego-vehicle. The authors call these feature *target-level*. Many radar-based road user detection methods first cluster radar targets by their *target-level* features. Object detection and classification methods depend on the success of this initial classification step. Other methods explore using the *e low-level radar cube* given by early processing of the radar signal. The radar cube is a 3D data matrix with axes corresponding to range, azimuth, and velocity (also called Doppler). In contrast to the target-level data, the radar cube provides the complete speed distribution (i.e. Doppler vector) at multiple 2D range-azimuth locations. Such distributions can capture modulations of an object’s main velocity caused by its moving parts, e.g. swinging limbs or rotating wheels. In this work, the authors show that these data can be used as valuable features for object classification. The features derived from a 3D cube are called *low-level*. This work focus only on addressing moving road users. In *Prophet*, proposed in [10], radar targets are first clustered into objects by DBSCAN. Then, several cluster-wise features are extracted, e.g. the variance/mean of *v~r~* and *r*. The performance of various classifiers (Random Forest, Support Vector Machine (SVM), 1-layer Neural Network, etc.) were compared in a single-class (pedestrian) detection task. The Schumann method [11] also uses clusters calculated by DBSCAN as the base of a multi-class (car, pedestrian, group of pedestrians, cyclist, truck) detection, but extract different features, e.g. deviation and spread of α (azimuth). In this letter, the authors propose a radar-based, multi-class moving road user detection method, which exploits both expert knowledge at the *target-level* (accurate 2D location, addressed phase ambiguity), and *low-level* information from the full 3D radar cube rather than a 2D projection. The method's core is a Convolutional Neural Network (CNN) called Radar Target Classification Network (*RTCnet*). The inclusion of low-level data enables the classification of individual radar targets before any object clustering; the latter step can benefit from the obtained class scores.
+Radars are attractive sensors for intelligent vehicles as they are relatively robust to weather and lighting conditions (e.g. rain, snow, darkness) compared to camera and LIDAR sensors. They also have excellent range sensitivity and can measure radial object velocities directly using the Doppler effect. A radar outputs a point-cloud of reflections called *radar targets* in every frame and each radar target has the following features: range $r$ and azimuth $\alpha$, radar cross section RCS (i.e. reflectivity), and the object’s radial speed $v_r$ relative to the ego-vehicle. The authors call these feature *target-level*. Many radar-based road user detection methods first cluster radar targets by their *target-level* features. Object detection and classification methods depend on the success of this initial classification step. Other methods explore using the *low-level radar cube* given by early processing of the radar signal. The radar cube is a 3D data matrix with axes corresponding to range, azimuth, and velocity (also called Doppler). In contrast to the target-level data, the radar cube provides the complete speed distribution (i.e. Doppler vector) at multiple 2D range-azimuth locations. Such distributions can capture modulations of an object’s main velocity caused by its moving parts, e.g. swinging limbs or rotating wheels. In this work, the authors show that these data can be used as valuable features for object classification. The features derived from a 3D cube are called *low-level*. This work focus only on addressing moving road users. In *Prophet*, proposed in [10], radar targets are first clustered into objects by DBSCAN. Then, several cluster-wise features are extracted, e.g. the variance/mean of $v_r$ and $r$. The performance of various classifiers (Random Forest, Support Vector Machine (SVM), 1-layer Neural Network, etc.) were compared in a single-class (pedestrian) detection task. The Schumann method [11] also uses clusters calculated by DBSCAN as the base of a multi-class (car, pedestrian, group of pedestrians, cyclist, truck) detection, but extract different features, e.g. deviation and spread of α (azimuth). In this letter, the authors propose a radar-based, multi-class moving road user detection method, which exploits both expert knowledge at the *target-level* (accurate 2D location, addressed phase ambiguity), and *low-level* information from the full 3D radar cube rather than a 2D projection. The method's core is a Convolutional Neural Network (CNN) called Radar Target Classification Network (*RTCnet*). The inclusion of low-level data enables the classification of individual radar targets before any object clustering; the latter step can benefit from the obtained class scores.
 
 ## Proposed method
 
@@ -409,15 +425,15 @@ Radars are attractive sensors for intelligent vehicles as they are relatively ro
 
 ### Pre-Processing
 
-Every single frame of radar targets and a single frame of the radar cube (low-level data) is fetched and pre-processed. First, radar targets with low compensated (absolute) velocity are considered as static and are filtered out. Then, corresponding target-level and low-level radar data are connected. Next, we look up each remaining dynamic radar target, such as a grid cell in the radar cube based on their reported range, azimuth, and (relative) velocity (*r*, *α*, *v~r~*). Afterward, a 3D block of the radar cube is cropped around each radar target’s grid cell with radius in range/azimuth/Doppler dimensions (L, W, H).
+Every single frame of radar targets and a single frame of the radar cube (low-level data) is fetched and pre-processed. First, radar targets with low compensated (absolute) velocity are considered as static and are filtered out. Then, corresponding target-level and low-level radar data are connected. Next, we look up each remaining dynamic radar target, such as a grid cell in the radar cube based on their reported range, azimuth, and (relative) velocity ($r$, $\alpha$, $v_r$). Afterward, a 3D block of the radar cube is cropped around each radar target’s grid cell with radius in range/azimuth/Doppler dimensions ($L$, $W$, $H$).
 
 ### Network
 
 The *RTCnet* structure can be seen in detail in the figure above. The network is composed of three modules:
 
-* **Down-Sample Range and Azimuth Dimensions:** it aims to encode the radar target’s spatial neighborhood’s Doppler distribution into a tensor without extension in range or azimuth. In other words, it transforms the 1 × W × L × H sized data to a C × 1 × 1 × H sized tensor (sizes are given as Channel × Azimuth × Range × Doppler), where C was chosen as 25. To do this, it contains two 3D convolutional layers (Conv) followed by two maxpool layers (MP).
-* **Process Doppler Dimension:** the aim of this module is to extract class information from the speed distribution around the target. It operates on the output of the first which is 25 × 1 × 1 × H. To do this, two 1D convolutions along the Doppler dimension are applied, each of them is followed by a maxpool layer. The output of this module is a 32 × 1 × 1 × H/8 block.
-* **Score Calculation:** The output of the second module is flattened and concatenated to the *target-level* features (*r*, *α*, *v~r~*, *RCS*) and used by this module. It uses two fully connected layers with 128 nodes each to provide scores. The output layer has either four nodes (one for each class) for multi-class classification or two for binary tasks.
+* **Down-Sample Range and Azimuth Dimensions:** it aims to encode the radar target’s spatial neighborhood’s Doppler distribution into a tensor without extension in range or azimuth. In other words, it transforms the 1 × $W$ × $L$ × $H$ sized data to a $C$ × 1 × 1 × $H$ sized tensor (sizes are given as Channel × Azimuth × Range × Doppler), where C was chosen as 25. To do this, it contains two 3D convolutional layers (Conv) followed by two maxpool layers (MP).
+* **Process Doppler Dimension:** the aim of this module is to extract class information from the speed distribution around the target. It operates on the output of the first which is 25 × 1 × 1 × $H$. To do this, two 1D convolutions along the Doppler dimension are applied, each of them is followed by a maxpool layer. The output of this module is a 32 × 1 × 1 × $H/8$ block.
+* **Score Calculation:** The output of the second module is flattened and concatenated to the *target-level* features ($r$, $\alpha$, $v_r$, $RCS$) and used by this module. It uses two fully connected layers with 128 nodes each to provide scores. The output layer has either four nodes (one for each class) for multi-class classification or two for binary tasks.
 
 ### Ensemble Classifying
 
@@ -425,7 +441,7 @@ It is possible to train the third module to perform multi-class classification d
 
 ### Object Clustering
 
-To obtain proposals for object detection, the authors cluster the classified radar targets with DBSCAN incorporating the predicted class information. The radar targets with bike/pedestrian/car predicted labels are clustered in separate steps. As a metric, we used a spatial threshold *γ~xy~* on the Euclidean distance in the x, y space, and a separate speed threshold *γ~v~* in velocity dimension. The advantage of clustering each class separately is that no universal parameter set is needed for DBSCAN. The authors use different parameters for different classes, e.g. larger radius for cars and small ones for pedestrians. Furthermore, swapping the clustering and classification step makes it possible to consider objects with a single reflection. The following figure reports three challenging cases  for the cluster classification:
+To obtain proposals for object detection, the authors cluster the classified radar targets with DBSCAN incorporating the predicted class information. The radar targets with bike/pedestrian/car predicted labels are clustered in separate steps. As a metric, we used a spatial threshold $\gamma_{xy}$ on the Euclidean distance in the $x, y$ space, and a separate speed threshold $\gamma_v$ in velocity dimension. The advantage of clustering each class separately is that no universal parameter set is needed for DBSCAN. The authors use different parameters for different classes, e.g. larger radius for cars and small ones for pedestrians. Furthermore, swapping the clustering and classification step makes it possible to consider objects with a single reflection. The following figure reports three challenging cases  for the cluster classification:
 
 * **A:** objects may be clustered together (red circle)
 * **B:** large objects may be split up into several clusters
@@ -451,15 +467,15 @@ The proposed method is tested in two different experiments:
 
 We selected Schumann [11] as a baseline because it is the only multi-object, multi-class detection method found with small latency. Also, *Prophet* [1] is selected as a baseline. Since the DBSCAN parameters are sensor-specific, the following table shows the optimal parameters for the two baselines and for the class-specific clusters. Both baselines method has the parameter *v~min~*, used to find the static radar targets.
 
-| **Method**               | ***γ~xy~*** | ***γ~v~***  | ***Min Points*** | ***v~min~*** |
-| ------------------------ | ----------- | ----------- | ---------------- | ------------ |
-| *Prophet*                | 1.2 *m*     | 1.3 *m / s* | 2                | 0.4 *m / s*  |
-| *Schumann*               | 1.3 *m*     | 1.4 *m / s* | 2                | 0.4 *m / s*  |
-| Class specific: peds.    | 0.5 *m*     | 2.0 *m / s* | 1                | -            |
-| Class specific: cyclists | 1.6 *m*     | 1.5 *m / s* | 2                | -            |
-| Class specific: cars     | 4.0 *m*     | 1.0 *m / s* | 3                | -            |
+| **Method**               | *$\gamma_{xy}$* | **$\gamma_v$** | ***Min Points*** | **$v_{min}$** |
+| ------------------------ | --------------- | -------------- | ---------------- | ------------- |
+| *Prophet*                | 1.2 $m$         | 1.3 $m / s$    | 2                | 0.4 $m / s$   |
+| *Schumann*               | 1.3 $m$         | 1.4 $m / s$    | 2                | 0.4 $m / s$   |
+| Class specific: peds.    | 0.5 $m$         | 2.0 $m / s$    | 1                | -             |
+| Class specific: cyclists | 1.6 $m$         | 1.5 $m / s$    | 2                | -             |
+| Class specific: cars     | 4.0 $m$         | 1.0 $m / s$    | 3                | -             |
 
-For two baselines, the classifiers consists of a Random Forest with 50 trees. The size of the cropped block are set to L = W = 5, H = 32. The speed threshold to filter out static objects is a sensor-specific parameter and was set to 0.3 *m / s* based on empirical evidence. The thresholds to merge clusters during object clustering were set to 1 m spatially, 0.6 for scores, 2 *m / s* for pedestrian to cyclist, and 1.2 *m / s* for pedestrian/cyclist to car merges. The input data are normalized to be zero-mean and have a standard deviation of 1.
+For two baselines, the classifiers consists of a Random Forest with 50 trees. The size of the cropped block are set to $L = W = 5, H = 32$. The speed threshold to filter out static objects is a sensor-specific parameter and was set to 0.3 *m / s* based on empirical evidence. The thresholds to merge clusters during object clustering were set to 1 $m$ spatially, 0.6 for scores, 2  $m / s$for pedestrian to cyclist, and 1.2 $m / s$ for pedestrian/cyclist to car merges. The input data are normalized to be zero-mean and have a standard deviation of 1.
 
 ## Results
 
@@ -477,7 +493,7 @@ The results of *experiment 1* (target classification) are presented in the follo
 | *RTCnet (no ensemble)*  | 0.67           | 0.65        | 0.47     | 0.89      | 0.67     |
 | *RTCnet*                | **0.71**       | 0.67        | **0.50** | **0.92**  | **0.70** |
 
-*RTCnet* outperformed the two cluster-wise baselines reaching an average score of 0.70. *Schumann* has slightly better results on cyclists than*RTCnet* (0.68 vs 0.67) but performs significantly worse on pedestrians (0.67 vs 0.71) and cars (0.46. vs 0.50). The ablation study showed that removing each feature yields worse results than the complete pipeline, with the exception of *RTCnet (no RCS)* which has an average of 0.69. The results also show that classification performance changes over the distance from the target object and the vehicle, based on the number of samples in the training set. The figure below shows this fact.
+*RTCnet* outperformed the two cluster-wise baselines reaching an average score of 0.70. *Schumann* has slightly better results on cyclists than *RTCnet* (0.68 vs 0.67) but performs significantly worse on pedestrians (0.67 vs 0.71) and cars (0.46. vs 0.50). The ablation study showed that removing each feature yields worse results than the complete pipeline, with the exception of *RTCnet (no RCS)* which has an average of 0.69. The results also show that classification performance changes over the distance from the target object and the vehicle, based on the number of samples in the training set. The figure below shows this fact.
 
 ![Target-wise scores (lines) and number of targets in training set (bars) in function of distance from vehicle](images/resultsdistance.gif)
 
@@ -509,31 +525,129 @@ In extensive experiments on a real-life dataset, the authors showed that the pro
 
 ## Introduction
 
-In computer vision, pattern recognition, and robotics, *point set registration*, also known as *point cloud registration*, is the process of finding a spatial transformation (*e.g.,* scaling, rotation and translation) that aligns two point clouds. The 3D point cloud is a recently popular data format. The most popular and classic method for point cloud registration is the iterative closest point (ICP) algorithm [13]. ICP calculates the rigid motion based on a fixed correspondence between one point cloud and another, updating the correspondence to minimize the point-to-point distances. Although ICP can achieve highly accurate registration, the registration often fails by falling into the local minimum. In other words, the registration accuracy of ICP depends strongly on its initial perturbation. Despite this, the inherent lack of structure has caused difficulties when adopting point clouds as direct input in deep learning architecture. PointNet [14], overcomes these difficulties,providing a mechanism to extract the feature related to the point clouds. PointNet is a general representation of an unstructured point cloud that allows object detection, segmentation, and so on. PointNetLK [15] is the latest deep learning-based registration techniques using PointNet [2]. PointNetLK directly optimizes the distance of aggregated features using gradient method. This approach overcomes computational speed and local minimum problems. In this paper, "DirectNet" is proposed as a baseline method as it is a simplistic approach. However, the authors think that PointNetLK and DirectNet do not consider local features, falling to fully utilize the point cloud information. In this work, CorrespondenceNet (CorsNet) is proposed. It is a novel point cloud registration method based on deep learning is proposed. This method feeds global features from PointNet to per-point local features to make effective use of point cloud information. The end-to-end network architecture consists of the main three parts: (1) extracting global features of point clouds with PointNet, (2) concatenating global features with local features of the source point cloud and outputting the correspondences of each point via fully connected layers and (3) estimating a rigid transform with singular value decomposition (SVD). The SVD part is also included in the end-to-end network architecture. The singular value decomposition is a factorization of a matrix *m \* n*. Given the matrix here $\mathbf {M}\displaystyle m\times n$, $\mathbf{M} = \mathbf{U}\Sigma\mathbf{V}$. It $\mathbf {M}$ is used in a geometrical operation, the same result can be obtain applying these three matrices in succession. In particular, $\mathbf {U}\displaystyle m\times n$ is an orthogonal matrix which applies a rotation,  $\Sigma\displaystyle n\times n$ is a diagonal matrix which scales only the axes and  $\mathbf {V}\displaystyle n\times q$ is another orthogonal matrix which applies another rotation.
+In computer vision, pattern recognition, and robotics, *point set registration*, also known as *point cloud registration*, is the process of finding a spatial transformation (*e.g.,* scaling, rotation and translation) that aligns two point clouds. The 3D point cloud is a recently popular data format. The most popular and classic method for point cloud registration is the iterative closest point (ICP) algorithm [13]. ICP calculates the rigid motion based on a fixed correspondence between one point cloud and another, updating the correspondence to minimize the point-to-point distances. Although ICP can achieve highly accurate registration, the registration often fails by falling into the local minimum. In other words, the registration accuracy of ICP depends strongly on its initial perturbation. Despite this, the inherent lack of structure has caused difficulties when adopting point clouds as direct input in deep learning architecture. PointNet [14], overcomes these difficulties, providing a mechanism to extract the feature related to the point clouds. PointNet is a general representation of an unstructured point cloud that allows object detection, segmentation, and so on. PointNetLK [15] is the latest deep learning-based registration techniques using PointNet [2]. PointNetLK directly optimizes the distance of aggregated features using the gradient method. This approach overcomes computational speed and local minimum problems. In this paper, "DirectNet" is proposed as a baseline method as it is a simplistic approach. However, the authors think that PointNetLK and DirectNet do not consider local features, falling to fully utilize the point cloud information. In this work, CorrespondenceNet (CorsNet) is proposed. It is a novel point cloud registration method based on deep learning is proposed. This method feeds global features from PointNet to per-point local features to make effective use of point cloud information. The end-to-end network architecture consists of the main three parts: (1) extracting global features of point clouds with PointNet, (2) concatenating global features with local features of the source point cloud and outputting the correspondences of each point via fully connected layers and (3) estimating a rigid transform with singular value decomposition (SVD). The SVD part is also included in the end-to-end network architecture. The singular value decomposition is a factorization of a matrix $m \times n$. Given the matrix here $\mathbf {M}_{m\times n}$, $\mathbf{M} = \mathbf{U}\Sigma\mathbf{V}$. It $\mathbf {M}$ is used in a geometrical operation, the same result can be obtained applying these three matrices in succession. In particular, $\mathbf {U}_{m\times n}$ is an orthogonal matrix that applies a rotation,  $\Sigma_{n\times n}$ is a diagonal matrix that scales only the axes and  $\mathbf {V}_{n\times q}$ is another orthogonal matrix that applies another rotation.
 
 ![Singular value decomposition](images/singolarvaluedec.png)
 
 ## Proposed method (CorsNet)
 
-A point cloud is represented as a set of 3D points $\{P : Pi|i = 1, . . ., n\} ⊂ R3$ whose each point $Pi$ is a vector of its (x, y, z) coordinate. The following figure shows the CorstNet architecture.
+A point cloud is represented as a set of 3D points $\{P : P_i|i = 1, . . ., n\} \subset R_3$ whose each point $P_i$ is a vector of its $(x, y, z)$ coordinate. The following figure shows the CorstNet architecture.
 
 ![CorsNet architecture](images/corsnetarch.gif)
 
-The red $PS$ and blue $PT$ point clouds represent the *source* and *template* point clouds, respectively. We find the rigid transform $G ∈ SE$, which includes the alignment between $PS$ and $PT$. The model mainly consists of three components:
+The red $\boldsymbol{P}_S$ and blue $\boldsymbol{P}_T$ point clouds represent the *source* and *template* point clouds, respectively. We find the rigid transform $\boldsymbol{G} \in SE$, which includes the alignment between $\boldsymbol{P}_S$ and $\boldsymbol{P}_T$. The model mainly consists of three components:
 
-* **Global feature extraction:** this first module extract the point cloud's features. These feature must include three factors: invariance in order, acquisition of local feature and invariance in rotation. PointNet is used to absolve this goal. It satisfying these three requirements and it has achieved high accuracy and low computational complexity in various benchmarks. The PointNet output is a 1 × 1024 vector obtained by a max pooling of two MLP (multi-layer perceptron). The feature are extracted both for the source and template point clouds.
+* **Global feature extraction:** this first module extract the point cloud's features. These features must include three factors: invariance in order, acquisition of local feature, and invariance in rotation. PointNet is used to absolve this goal. It satisfying these three requirements and it has achieved high accuracy and low computational complexity in various benchmarks. The PointNet output is a 1 × 1024 vector obtained by a max-pooling of two MLP (multi-layer perceptron). The features are extracted both for the source and template point clouds.
 
-* **Correspondence estimation:** after computing the global features of the source and template point cloud, this module find the point local features by concatenating the global feature with each of the point features. The network output is t $ΔPs$, a n × 3 matrix. By adding this $ΔPS$ to $PS$, the tentative transform destination can be calculated: $Pˆ T = PS + ΔPS$. This method regresses correspondences $ΔPS$ and estimates a rigid transform based on the estimated correspondences using SVD: $\mathbf {G} · PS = PT $.
+* **Correspondence estimation:** after computing the global features of the source and template point cloud, this module finds the point local features by concatenating the global feature with each of the point features. The network output is t $\Delta\boldsymbol{P}_S$, a $n × 3$ matrix. By adding this $\Delta\boldsymbol{P}_S$ to $\boldsymbol{P}_S$, the tentative transform destination can be calculated as follow:
 
-* **SVD:** the source point cloud is now aligned with the template point cloud and the following is the approach for calculating a rigid transformation using SVD:
+  $\begin{equation*} \hat{\boldsymbol {P}_T} = \boldsymbol {P}_S + \Delta \boldsymbol {P}_S \end{equation*}$
 
-  * **WRITE FORMULAS**
+  This method regresses correspondences $\Delta\boldsymbol{P}_S$ and estimates a rigid transform based on the estimated correspondences using SVD
 
-  Now, it is possible to calculate the estimated rigid transform $Gest$ and the twist parameters $ξest ∈ R6$ as follow:
+  $\begin{equation*} \boldsymbol {G}\cdot \boldsymbol {P}_S= \boldsymbol {P}_T \end{equation*}$
 
-  ​	**formulaaaa**
+* **SVD:** the source point cloud is now aligned with the template point cloud and the following is the approach for calculating a rigid transformation using SVD as follows.
 
-The dataset used to test the proposed method is called ModelNet40 [16]. From this 
+  Define the centroids of $\boldsymbol{P}_S$ and $\hat{\boldsymbol{P}_T}$ as:
+
+  $\begin{equation*} \overline{\boldsymbol {P}_S} = \frac{1}{n}\sum ^{n}_{i=1}\boldsymbol {P}_S \;\;\; \text{and} \;\;\; \overline{\hat{\boldsymbol {P}_T}} = \frac{1}{n}\sum ^{n}_{i=1}\hat{\boldsymbol {P}_T} \end{equation*}$
+
+  and calculate the cross-covariance matrix H:
+
+  $\begin{equation*} \boldsymbol {H}= \sum ^{N}_{i=1}\left(\hat{\boldsymbol {P}_T}-\overline{\hat{\boldsymbol {P}_T}}\right)\left(\boldsymbol {P}_S-\overline{\boldsymbol {P}_S}\right)^{T}.  \end{equation*}$
+
+  Then, use SVD to decompose $\boldsymbol{H}$ to $\boldsymbol{U},\boldsymbol{V} \in SO$
+
+  $ \begin{equation*} [\boldsymbol {U}, \boldsymbol {S}, \boldsymbol {V}]= SVD (\boldsymbol {H}). \end{equation*}$
+
+  and, using this decomposition, extract the rigid transform elements, estimated rotation, $\boldsymbol{R}_{est}\in SO$ and translation, $\boldsymbol{t}_{est} \in \R^3$
+
+  $\begin{align*} \boldsymbol {R}_{est} &= \boldsymbol {V}\boldsymbol {U}^{T}.\\\boldsymbol {t}_{est} &= - \boldsymbol {R}\cdot \overline{\hat{\boldsymbol {P}_T}} + \overline{\boldsymbol {P}_S}. \end{align*}$
+
+  Now, it is possible to calculate the estimated rigid transform $\mathbf{G}_{est}$ and the twist parameters $\mathbf{\xi}_{est} \in \R^{6}$ as follow:
+
+  $\begin{align*} \boldsymbol {G}_{est} &= \left(\begin{array}{cc}\boldsymbol {R}_{est} & \boldsymbol {t}_{est} \\ \boldsymbol {0} & 1 \end{array} \right). \\ \boldsymbol {\xi }_{est} &= \phi \left(\boldsymbol {G}_{est} \right). \end{align*}$
+
+The dataset used to test the proposed method is called ModelNet40 [16]. From this, the source point clouds ($\boldsymbol{P}_S$) are extracted and the ground-truth estimated rigid transform ($\boldsymbol{G}_{gt}$) can be defined as:
+
+ $\begin{equation*} \boldsymbol {P}_{T} = \boldsymbol {G}_{gt}\cdot \boldsymbol {P}_{S}.\end{equation*}$
+
+Now, we call $\boldsymbol{Cors}$ the correspondence between two point clouds, in particular:
+
+$\begin{align*} \boldsymbol {Cors}_{gt} &= \boldsymbol {P}_{T} - \boldsymbol {P}_{S}. \\ \boldsymbol {Cors}_{est}& = \hat{\boldsymbol {P}_{T}} - \boldsymbol {P}_{S}. \end{align*}$
+
+Subsequently, we define three kinds of loss elements using previously values:
+
+$\begin{align*} \boldsymbol {loss}_{1} &= ||(\boldsymbol {G}_{est})^{-1}\cdot \boldsymbol {G}_{gt} - \boldsymbol {I}_{4}||_{F}. \\ \boldsymbol {loss}_{2} &= ||\boldsymbol {\xi }_{gt}-\boldsymbol {\xi }_{est}||^{2}. \\ \boldsymbol {loss}_{3} &= ||\boldsymbol {Cors}_{gt} - \boldsymbol {Cors}_{est}||^{2}. \end{align*}$
+
+From them, four loss functions are defined as follow:
+
+$\begin{align*} \boldsymbol {Loss}_{v1}& = \boldsymbol {loss}_{1}. \\ \boldsymbol {Loss}_{v2}& = \boldsymbol {loss}_{2}. \\ \boldsymbol {Loss}_{v3}& = \boldsymbol {loss}_{1} + \boldsymbol {loss}_{3}.\\ \boldsymbol {Loss}_{v4}& = \boldsymbol {loss}_{2} + \boldsymbol {loss}_{3}.  \end{align*}$
+
+The authors verified the effectiveness of each loss function in the experiments.
+
+## Proposed method (DirectNet)
+
+The authors proposed a novel method which directly regresses the pose, including rotation $\boldsymbol{R}_{euler} ∈ \R^3 $ (Euler angle) and translation $\boldsymbol{t} ∈ \R^3$, as shown in the following figure. 
+
+![DirectNet architecture](images/directnet.gif)
+
+DirectNet consists of two parts: the global feature extraction module, which is identical to CorsNet (that is PointNet), and the global estimation part. The $\boldsymbol{P}_S$ and $\boldsymbol{P}_T$ global features extracted with PointNet are concatenated and converted to 1 × 6 vector. The output 1 × 6 vectors is $[x_{euler}, y_{euler}, z_{euler}, x_{t}, y_{t}, z_{t}]^T$. The first half of this vector is represented as $\boldsymbol{R_{euler}} = [x_{euler}, y_{euler}, z_{euler}]^T$ . This $\boldsymbol{R_{euler}}$ is converted into $\boldsymbol{R_{est}} \in SO $ as follows:
+
+$\begin{align*} \boldsymbol {x}_{mat}& = \left(\begin{array}{ccc}1 & 0 & 0 \\ 0 & \cos x_{euler} & -\sin x_{euler} \\ 0 & \sin x_{euler} & \cos x_{euler} \end{array} \right). \\ \boldsymbol {y}_{mat} &= \left(\begin{array}{ccc}\cos y_{euler} & 0 & \sin y_{euler} \\ 0 & 1 & 0 \\ -\sin y_{euler} & 0 & \cos y_{euler} \end{array} \right). \\ \boldsymbol {z}_{mat} &= \left(\begin{array}{ccc}\cos z_{euler} & -\sin z_{euler} & 0 \\ \sin z_{euler} & \cos z_{euler} & 0 \\ 0 & 0 & 1 \end{array} \right). \\ \boldsymbol {R}_{est}& = \boldsymbol {x}_{mat} \cdot \boldsymbol {y}_{mat} \cdot \boldsymbol {z}_{mat} \end{align*}$
+
+The last part, instead, define the translation vector $\boldsymbol{t_{est}}$ as 
+
+$\begin{equation*} \boldsymbol {t}_{est} = [x_{t}, y_{t}, z_{t}]^{T}. \end{equation*}$
+
+Using $\boldsymbol {R}_{est}$ and $\boldsymbol {t}_{est}$ is possible to determine $\boldsymbol {G}_{est}$ and $\boldsymbol {\xi}_{est}$ as done for CorsNet. For DirectNet two loss functions are formulated:
+
+$\begin{align*} \boldsymbol {Loss}_{v1} &= ||(\boldsymbol {G}_{est})^{-1}\cdot \boldsymbol {G}_{gt} - \boldsymbol {I}_{4}||_{F}. \\ \boldsymbol {Loss}_{v2} &= ||\boldsymbol {\xi }_{gt}-\boldsymbol {\xi }_{est}||^{2}.  \end{align*}$
+
+## Experiments
+
+The proposed method CorsNet is compared with ICP and PointNetLK, DirectNet (described in this work). 
+
+![Point cloud registration. **Green**: source, **Blue**: template, **Red**: transformed point cloud. Only the proposed method achieves accurate registration regardless of the initial perturbations.](images/pointcloudreg.gif)
+
+The dataset used is ModelNet40, which includes various point clouds with 40 categories. The point clouds' coordinates are normalized to be in the $[0, 1]^3$ interval and the points of each model's surface are sampling to be exactly 1024. The authors measure the root mean square error (RMSE) of rotation $\boldsymbol{R}$ and translation $\boldsymbol{t}$ for each experimental setting. The first experiment consists into evaluate the models using the same categories. 20 categories from the dataset were chosen and they are used for both training and testing of all networks. CorsNet and DirectNet were trained using all the losses reported in the sections above. The authors chose a ground-truth transformation ($\boldsymbol{G}_{gt}$) randomly by an interval of $[0, 45]$ degrees for rotation and $[0, 0.8]$ for translation. The following table shows the evaluation results of all models, using all possible loss functions.
+
+| **Method (loss type)**             | **RMSE ($\boldsymbol{R}$)** | **RMSE ($\boldsymbol{t}$)** |
+| ---------------------------------- | --------------------------- | --------------------------- |
+| ICP                                | 46.4628                     | 0.26144                     |
+| DirectNet $\boldsymbol{Loss}_{v1}$ | 19.4791                     | 0.01218                     |
+| DirectNet $\boldsymbol{Loss}_{v2}$ | 20.9916                     | 0.01690                     |
+| PointNetLK                         | **14.9746**                 | 0.01690                     |
+| CorsNet $\boldsymbol{Loss}_{v1}$   | 18.6482                     | 0.01574                     |
+| CorsNet $\boldsymbol{Loss}_{v2}$   | 17.9941                     | 0.00725                     |
+| CorsNet $\boldsymbol{Loss}_{v3}$   | 18.8303                     | **0.00632**                 |
+| CorsNet $\boldsymbol{Loss}_{v4}$   | 16.2356                     | 0.00693                     |
+
+The results show that the proposed CorsNet, whose loss function is $\boldsymbol{Loss}_{v3}$, achieved the highest accuracy in terms of translation. The following figure shows (on its left part) the ratio between the root mean square error with respect to perturbation both for rotation and translation. To verify the robustness of the categories, the authors evaluated the proposed network architecture using different categories for training and testing. This is the second experiment. The table below reports the performance evaluation results for the proposed and related methods.
+
+| **Method (loss type)**             | **RMSE ($\boldsymbol{R}$)** | **RMSE ($\boldsymbol{t}$)** |
+| ---------------------------------- | --------------------------- | --------------------------- |
+| ICP                                | 45.8016                     | 0.28369                     |
+| DirectNet $\boldsymbol{Loss}_{v1}$ | 20.8310                     | 0.01983                     |
+| DirectNet $\boldsymbol{Loss}_{v2}$ | 22.0024                     | 0.01712                     |
+| PointNetLK                         | 21.0866                     | 0.03525                     |
+| CorsNet $\boldsymbol{Loss}_{v1}$   | 20.2198                     | 0.02401                     |
+| CorsNet $\boldsymbol{Loss}_{v2}$   | 20.3712                     | 0.02396                     |
+| CorsNet $\boldsymbol{Loss}_{v3}$   | 19.4610                     | 0.02288                     |
+| CorsNet $\boldsymbol{Loss}_{v4}$   | **16.7927**                 | **0.01398**                 |
+
+Rotation and translation are estimated most accurately by CorsNet, whose loss function is $\boldsymbol{Loss}_{v4}$. The following figure shows (on its right part) the ratio between the root mean square error with respect to perturbation both for rotation and translation.
+
+![Each graph shows the transition of a root mean square error with respect to the initial perturbation (rotation and translation). The left part refers to the experiments on the same category while the right part refers different categories' experiments](images/mod.gif)
+
+## Conclusions
+
+The superiority of the proposed method has been proven qualitatively and quantitatively. CorsNet $\boldsymbol{Loss}_{v3}$ and CorsNet $\boldsymbol{Loss}_{v4}$ ware appreciably more accurate thanCorsNet $\boldsymbol{Loss}_{v1}$ and CorsNet $\boldsymbol{Loss}_{v2}$, depending on whether the correspondence loss is included in the loss function. The following two figure shows the registration results for the methods tested. Only the proposed method (CorsNet) successfully aligns the point clouds without falling into the local minimum, especially where the input point clouds include the repeating structures. 
+
+![Comparison with DirectNet, PointNetLK, and ICP (green: source, blue: template, red: transformed)](images/registrationres.gif)
+
+The authors suppose that this is because only the proposed method links the local features to the global features, making the most of the local and global point cloud information.
 
 # Bibliography
 
