@@ -503,6 +503,38 @@ The combination of the proposed network and the clustering step outperformed the
 
 In extensive experiments on a real-life dataset, the authors showed that the proposed method improves upon the baselines in target-wise classification by reaching an average score of 0.70 (vs. 0.68 *Schumann*). Furthermore, the importance of low-level features and ensembling in an ablation study is demonstrated. Furthermore, the authors show that the proposed method outperforms the baselines overall in object-wise classification by yielding an average score of 0.56 (vs. 0.48 *Schumann*).
 
+# CorsNet: 3D Point Cloud Registration by Deep Neural Network
+
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 3, JULY 2020*
+
+## Introduction
+
+In computer vision, pattern recognition, and robotics, *point set registration*, also known as *point cloud registration*, is the process of finding a spatial transformation (*e.g.,* scaling, rotation and translation) that aligns two point clouds. The 3D point cloud is a recently popular data format. The most popular and classic method for point cloud registration is the iterative closest point (ICP) algorithm [13]. ICP calculates the rigid motion based on a fixed correspondence between one point cloud and another, updating the correspondence to minimize the point-to-point distances. Although ICP can achieve highly accurate registration, the registration often fails by falling into the local minimum. In other words, the registration accuracy of ICP depends strongly on its initial perturbation. Despite this, the inherent lack of structure has caused difficulties when adopting point clouds as direct input in deep learning architecture. PointNet [14], overcomes these difficulties,providing a mechanism to extract the feature related to the point clouds. PointNet is a general representation of an unstructured point cloud that allows object detection, segmentation, and so on. PointNetLK [15] is the latest deep learning-based registration techniques using PointNet [2]. PointNetLK directly optimizes the distance of aggregated features using gradient method. This approach overcomes computational speed and local minimum problems. In this paper, "DirectNet" is proposed as a baseline method as it is a simplistic approach. However, the authors think that PointNetLK and DirectNet do not consider local features, falling to fully utilize the point cloud information. In this work, CorrespondenceNet (CorsNet) is proposed. It is a novel point cloud registration method based on deep learning is proposed. This method feeds global features from PointNet to per-point local features to make effective use of point cloud information. The end-to-end network architecture consists of the main three parts: (1) extracting global features of point clouds with PointNet, (2) concatenating global features with local features of the source point cloud and outputting the correspondences of each point via fully connected layers and (3) estimating a rigid transform with singular value decomposition (SVD). The SVD part is also included in the end-to-end network architecture. The singular value decomposition is a factorization of a matrix *m \* n*. Given the matrix here $\mathbf {M}\displaystyle m\times n$, $\mathbf{M} = \mathbf{U}\Sigma\mathbf{V}$. It $\mathbf {M}$ is used in a geometrical operation, the same result can be obtain applying these three matrices in succession. In particular, $\mathbf {U}\displaystyle m\times n$ is an orthogonal matrix which applies a rotation,  $\Sigma\displaystyle n\times n$ is a diagonal matrix which scales only the axes and  $\mathbf {V}\displaystyle n\times q$ is another orthogonal matrix which applies another rotation.
+
+![Singular value decomposition](images/singolarvaluedec.png)
+
+## Proposed method (CorsNet)
+
+A point cloud is represented as a set of 3D points $\{P : Pi|i = 1, . . ., n\} ⊂ R3$ whose each point $Pi$ is a vector of its (x, y, z) coordinate. The following figure shows the CorstNet architecture.
+
+![CorsNet architecture](images/corsnetarch.gif)
+
+The red $PS$ and blue $PT$ point clouds represent the *source* and *template* point clouds, respectively. We find the rigid transform $G ∈ SE$, which includes the alignment between $PS$ and $PT$. The model mainly consists of three components:
+
+* **Global feature extraction:** this first module extract the point cloud's features. These feature must include three factors: invariance in order, acquisition of local feature and invariance in rotation. PointNet is used to absolve this goal. It satisfying these three requirements and it has achieved high accuracy and low computational complexity in various benchmarks. The PointNet output is a 1 × 1024 vector obtained by a max pooling of two MLP (multi-layer perceptron). The feature are extracted both for the source and template point clouds.
+
+* **Correspondence estimation:** after computing the global features of the source and template point cloud, this module find the point local features by concatenating the global feature with each of the point features. The network output is t $ΔPs$, a n × 3 matrix. By adding this $ΔPS$ to $PS$, the tentative transform destination can be calculated: $Pˆ T = PS + ΔPS$. This method regresses correspondences $ΔPS$ and estimates a rigid transform based on the estimated correspondences using SVD: $\mathbf {G} · PS = PT $.
+
+* **SVD:** the source point cloud is now aligned with the template point cloud and the following is the approach for calculating a rigid transformation using SVD:
+
+  * **WRITE FORMULAS**
+
+  Now, it is possible to calculate the estimated rigid transform $Gest$ and the twist parameters $ξest ∈ R6$ as follow:
+
+  ​	**formulaaaa**
+
+The dataset used to test the proposed method is called ModelNet40 [16]. From this 
+
 # Bibliography
 
 [1] Niko Sünderhauf, Oliver Brock, Walter Scheirer, Raia Hadsell, Dieter Fox, Jürgen Leitner, Ben Upcroft, Pieter Abbeel, Wolfram Burgard, Michael Milford, Peter Corke, "The Limits and Potentials of Deep Learning for Robotics", eprint arXiv:1804.06557, April 2018
@@ -526,6 +558,16 @@ In extensive experiments on a real-life dataset, the authors showed that the pro
 [10] R. Prophet et al., “Pedestrian classification with a 79 GHz automotive radar sensor,” in Proc. 19th Int. Radar Symp., 2018, pp. 1–6.
 
 [11] O. Schumann, M. Hahn, J. Dickmann, and C. Wöhler, "Comparison of random forest and long short-term memory network performances in classification tasks using radar," in Proc. Sensor Data Fusion: Trends, Solutions, Appl., 2017, pp. 1–6.
+
+[12] A. Kurobe, Y. Sekikawa, K. Ishikawa and H. Saito, "CorsNet: 3D Point Cloud Registration by Deep Neural Network," in *IEEE Robotics and Automation Letters*, vol. 5, no. 3, pp. 3960-3966, July 2020, doi: 10.1109/LRA.2020.2970946.
+
+[13] P. J. Besl and N. D. McKay, "Method for registration of 3-d shapes," in Proc. Sensor Fusion IV: Control Paradigms Data Struct., 1992, vol. 1611, 1992, pp. 586–607.
+
+[14] C. R. Qi, H. Su, K. Mo, and L. J. Guibas, "Pointnet: Deep learning on point sets for 3d classification and segmentation," in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., 2017, pp. 652–660.
+
+[15] Y. Aoki, H. Goforth, R. A. Srivatsan, and S. Lucey, "Pointnetlk: Robust & efficient point cloud registration using pointnet," IEEE Conf. Comput. Vis. Pattern Recog. (CVPR), Jun. 2019.
+
+[16] Z. Wu et al., "3D shapenets: A deep representation for volumetric shapes," in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., 2015, pp. 1912–1920.
 
 
 
