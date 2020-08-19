@@ -649,6 +649,38 @@ The superiority of the proposed method has been proven qualitatively and quantit
 
 The authors suppose that this is because only the proposed method links the local features to the global features, making the most of the local and global point cloud information.
 
+# Learning Deep NBNN Representations for Robust Place Categorization
+
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 2, NO. 3, JULY 2017*
+
+## Introduction
+
+An important aspect of human-robot interaction, is the ability of artificial agents to understand the way humans think and talk about abstract spatial concepts. To do this, an autonomous agent has to extract information from its sensor to assign a semantic label to a specific place. In particular, this work focuses on assign label to images. The most important challenges in identifying places come from the complexity of the concepts to be recognized and from the variability of the conditions in which the images are captured. In fact,  scenes from the same category may differ significantly, while images corresponding to different places may look similar. The historical take on these issues has been to model the visual appearance of scenes considering a large variety of (shallow) learning models (e.g. SVMs, Random Forests), but approaches based on learning deep representations have become mainstream. Some work, like [19], demonstrated the benefits derived from feature extraction through convolutional deep neural networks. Subsequent studies demonstrated the benefits of region-based approaches (i.e. considering only specific image parts) in combination with descriptors derived from CNNs, such as to obtain models which are robust to viewpoint changes and occlusions. Other successfully works tried to bring back the notion of localities into deep networks, e.g. by designing appropriate pooling strategies or by casting the problem within the Image-2-Class (I2C) recognition statements, with a high degree of success. Despite this, these methods implements the CNN feature extraction and the classifier learning as two separate modules. This leads to two drawbacks: first, choosing heuristically the relevant localities means concretely cropping parts of the images before feeding them to the chosen features extractor. Second, it would be desirable to fully exploit the power of deep networks by directly learning the best representations for the task at hand, rather than re-use architectures trained on general-purpose databases like ImageNet. This work propose an approach for semantic place categorization which exploits local representations within a deep learning framework. The method is inspired by the recent work [18], which demonstrates that, by dividing images into regions and representing them with CNN-based features, state-of-the-art scene recognition accuracy can be achieved by exploiting an I2C approach, namely a parametric extension of the Naıve Bayes Nearest Neighbor (NBNN) model. The deep architecture for semantic scene classification seamlessly integrates the NBNN and CNN frameworks. We automatize the multi-scale patch extraction process by adopting a fully-convolutional network, guaranteeing a significant advantage in terms of computational cost over two-steps methods. This is the first attempt to fully unify NBNN and CNN, building a network in which the NBNN error is back-propagated to the CNN in a unified end-to-end training. 
+
+![The standard NBNN classification pipeline (a) versus the proposed model (b). ](images/NBNNdiff.gif)
+
+## Proposed method
+
+As represented in the figure above, images are decomposed into multiple regions (represented with CNN features) and a part-based classifier is used to infer the labels associated to places. However, differently from previous works, the proposed approach unifies the feature extraction and the classifier learning phases. Since this framework is derived from previous NBNN-based works, it is important to give an overview of this method. 
+
+### Naıve Bayes Non-Linear Learning 
+
+Let ${\mathcal X}$ denote the set of possible images and let ${\mathcal Y}$ be a finite set of class labels, indicating the different scene categories. The goal is to estimate a classifier $f : {\mathcal X} \rightarrow {\mathcal Y}$ from a training set ${\mathcal T} \subset {\mathcal X} \times {\mathcal Y}$. The NBNN method works under the assumption that there is a an intermediate Euclidean space $Z$ and a set-valued function $\phi$ that abstracts an input image $x \in {\mathcal X}$ into a set of descriptors in ${\mathcal Z}$, i.e. $\phi(x) \subset {\mathcal Z}$.  For instance, the image could be broken into patches and a descriptor in ${\mathcal Z}$ could be computed for each patch. Given a training set ${\mathcal T}$, let $\Phi_y({\mathcal T})$ be the set of descriptors computed from images in ${\mathcal T}$ having labels $y \in {\mathcal Y}$, i.e. $\Phi_y({\mathcal T}) = \{\phi(x): x \in {\mathcal X}, (x, y) \in {\mathcal T}\}$ . The NBNN classifier $f_{NBNN}$ is given as follows:
+
+$\begin{equation} f_\mathtt {NBNN}(x; {\mathcal T})=\text{arg min}_{y\in {\mathcal Y}}\sum _{z\in \phi (x)}d(z,\Phi _y({\mathcal T}))^2\,, \end{equation}$
+
+where $d(x, {\mathcal S}) = \inf\{\| z − s\|_2 : s \in {\mathcal S}\}$ denotes the smallest Euclidean distance between $z$ and an element of $  {\mathcal S} \subset {\mathcal Z}$. $f_{NBNN}$ has the drawback of being expensive at test time, due to the nearest-neighbor search. A possible way to reduce the complexity consists in learning a small, finite set ${\mathcal W}_y \subset {\mathcal Z}$ of representative prototypes for each class $y \in {\mathcal Y}$ to replace $\Phi_y({\mathcal T})$. This idea generates the NBNL (Naıve Bayes Non-Linear Learning). NBNL is developed by replacing $\Phi_y({\mathcal T})$ with the set of prototypes ${\mathcal W}_y$ and by assuming ${\mathcal Z}$ to be restricted to the unit ball. Under the latter assumption the bound $d(z, {\mathcal S})^{2} = 2 - \omega(z, {\mathcal S}) $ can be derived, where 
+
+$\begin{equation} \omega (z, {\mathcal S})= \left(\sum _{s\in {\mathcal S}}|\langle z,s\rangle |_+^{q}\right)^{1/q}\,. \end{equation}$
+
+Here, $\langle \cdot \rangle$ denotes the dot product, $q \in [1, +\infin]$ and $[x]_+ = \max(0, x)$. Finally, the NBNL is defined as follows (substituting $d()^{2}$)
+
+$\begin{equation} f_\mathtt {NBNL}(x; {\mathcal W})=\text{arg max}_{y\in {\mathcal Y}}\sum _{z\in \phi (x)}\omega (z, {\mathcal W} _y)\,. \end{equation}$
+
+In order to learn the prototypes ${\mathcal W}_y$ for each $y \in {\mathcal Y}$, each descriptor extracted from an image is promoted to a training sample.
+
+ 
+
 # Bibliography
 
 [1] Niko Sünderhauf, Oliver Brock, Walter Scheirer, Raia Hadsell, Dieter Fox, Jürgen Leitner, Ben Upcroft, Pieter Abbeel, Wolfram Burgard, Michael Milford, Peter Corke, "The Limits and Potentials of Deep Learning for Robotics", eprint arXiv:1804.06557, April 2018
@@ -682,6 +714,18 @@ The authors suppose that this is because only the proposed method links the loca
 [15] Y. Aoki, H. Goforth, R. A. Srivatsan, and S. Lucey, "Pointnetlk: Robust & efficient point cloud registration using pointnet," IEEE Conf. Comput. Vis. Pattern Recog. (CVPR), Jun. 2019.
 
 [16] Z. Wu et al., "3D shapenets: A deep representation for volumetric shapes," in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., 2015, pp. 1912–1920.
+
+[17] M. Mancini, S. R. Bulò, E. Ricci and B. Caputo, "Learning Deep NBNN Representations for Robust Place Categorization," in *IEEE Robotics and Automation Letters*, vol. 2, no. 3, pp. 1794-1801, July 2017, doi: 10.1109/LRA.2017.2705282.
+
+[18]  I. Kuzborskij, F. Maria Carlucci, and B. Caputo, "When naive bayes nearest neighbors meet convolutional neural networks," in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., 2016, pp. 2100–2109.
+
+[19] A. Krizhevsky, I. Sutskever, and G. E. Hinton, "Imagenet classification with deep convolutional neural networks," in Proc. 25th Int. Conf. Neural Inf. Process. Syst., 2012, pp. 1097–1105.
+
+[20] Y. Jia et al., "Caffe: Convolutional architecture for fast feature embedding," in Proc. 22nd ACM Int. Conf. Multimedia, 2014, pp. 675–678.
+
+[21] K. Simonyan and A. Zisserman, "Very deep convolutional networks for large-scale image recognition," 2014, arXiv preprint arXiv: 1409.1556.
+
+[22] C. Szegedy et al., "Going deeper with convolutions," in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., 2015, pp. 1–9.
 
 
 
