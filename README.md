@@ -7,7 +7,7 @@ In the last few years, advances in technologies and research have had a great im
 
 # The limits and potentials of deep learning for robotics
 
-*THE INTERNATIONAL JOURNAL OF ROBOTICS RESEARCH 2018, Vol. 37(4–5) 405–420*
+*THE INTERNATIONAL JOURNAL OF ROBOTICS RESEARCH 2018, Vol. 37(4–5) 405–420* [1]
 
 ## Introduction
 
@@ -141,7 +141,7 @@ The robotics community had accepted deep learning as a very powerful tool and be
 
 # A Machine Learning Approach to Visual Perception of Forest Trails for Mobile Robots
 
-*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 1, NO. 2, JULY 2016*
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 1, NO. 2, JULY 2016* [2]
 
 ## Introduction
 
@@ -169,7 +169,7 @@ The authors implement the trail perception module as DNN (deep neural network), 
 
 ### Experimental results
 
-For the three-class classification problem, the absolute accuracy metric is computed to evaluate the model performances. To have a more robust performance evaluation, the authors consider a derived two-class classification problem. The resulting problem consists in determining if an image is of class GS or not. There are calculated accuracy, corresponding precision (the proportion of positive classifications that are actual positives), recall (the proportion of the actual positives that are identified correctly), and the area under the ROC curve. The authors compare the DNN performance to three alternatives:
+For the three-class classification problem, the absolute accuracy metric is computed to evaluate the model performances. To have a more robust performance evaluation, the authors consider a derived two-class classification problem. The resulting problem consists of determining if an image is of class GS or not. There are calculated accuracy, corresponding precision (the proportion of positive classifications that are actual positives), recall (the proportion of the actual positives that are identified correctly), and the area under the ROC curve. The authors compare the DNN performance to three alternatives:
 
 - **Simple Saliency-based Model:** it is computed a saliency map of the input frame, based on the image hue. The saliency map is discretized to 16 × 9 blocks, and the average saliency for each block yields a 144-dimensional feature vector. An SVM model with an RBF kernel is learned from the training set to map this feature vector to the three-class: TL, GS, and TR.
 - **The method by Santana et al:** this algorithm is explained in [12] and it is applied to the dataset images (50 iterations per frame). Its output trail soft segmentation is sampled at each of the testing frames.
@@ -194,7 +194,7 @@ The model has good performance, even when compared to those of humans. However, 
 
 # A Hybrid Compact Neural Architecture for Visual Place Recognition
 
-*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020*
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020* [4]
 
 ## Introduction
 
@@ -292,7 +292,7 @@ FlyNet+CANN model achieves competitive visual localization results compared to e
 
 # A Multimodal Target-Source Classifier With Attention Branches to Understand Ambiguous Instructions for Fetching Daily Objects
 
-*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020*
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020* [29]
 
 ## Introduction
 
@@ -411,7 +411,7 @@ The MTCM-AB extends the MTCM, achieving higher accuracy. In addition, multimodal
 
 # CNN Based Road User Detection Using the 3D Radar Cube
 
-*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020*
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020* [8]
 
 ## Introduction
 
@@ -521,7 +521,7 @@ In extensive experiments on a real-life dataset, the authors showed that the pro
 
 # CorsNet: 3D Point Cloud Registration by Deep Neural Network
 
-*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 3, JULY 2020*
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 3, JULY 2020* [12]
 
 ## Introduction
 
@@ -651,25 +651,25 @@ The authors suppose that this is because only the proposed method links the loca
 
 # Learning Deep NBNN Representations for Robust Place Categorization
 
-*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 2, NO. 3, JULY 2017*
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 2, NO. 3, JULY 2017* [17]
 
 ## Introduction
 
-An important aspect of human-robot interaction, is the ability of artificial agents to understand the way humans think and talk about abstract spatial concepts. To do this, an autonomous agent has to extract information from its sensor to assign a semantic label to a specific place. In particular, this work focuses on assign label to images. The most important challenges in identifying places come from the complexity of the concepts to be recognized and from the variability of the conditions in which the images are captured. In fact,  scenes from the same category may differ significantly, while images corresponding to different places may look similar. The historical take on these issues has been to model the visual appearance of scenes considering a large variety of (shallow) learning models (e.g. SVMs, Random Forests), but approaches based on learning deep representations have become mainstream. Some work, like [19], demonstrated the benefits derived from feature extraction through convolutional deep neural networks. Subsequent studies demonstrated the benefits of region-based approaches (i.e. considering only specific image parts) in combination with descriptors derived from CNNs, such as to obtain models which are robust to viewpoint changes and occlusions. Other successfully works tried to bring back the notion of localities into deep networks, e.g. by designing appropriate pooling strategies or by casting the problem within the Image-2-Class (I2C) recognition statements, with a high degree of success. Despite this, these methods implements the CNN feature extraction and the classifier learning as two separate modules. This leads to two drawbacks: first, choosing heuristically the relevant localities means concretely cropping parts of the images before feeding them to the chosen features extractor. Second, it would be desirable to fully exploit the power of deep networks by directly learning the best representations for the task at hand, rather than re-use architectures trained on general-purpose databases like ImageNet. This work propose an approach for semantic place categorization which exploits local representations within a deep learning framework. The method is inspired by the recent work [18], which demonstrates that, by dividing images into regions and representing them with CNN-based features, state-of-the-art scene recognition accuracy can be achieved by exploiting an I2C approach, namely a parametric extension of the Naıve Bayes Nearest Neighbor (NBNN) model. The deep architecture for semantic scene classification seamlessly integrates the NBNN and CNN frameworks. We automatize the multi-scale patch extraction process by adopting a fully-convolutional network, guaranteeing a significant advantage in terms of computational cost over two-steps methods. This is the first attempt to fully unify NBNN and CNN, building a network in which the NBNN error is back-propagated to the CNN in a unified end-to-end training. 
+An important aspect of human-robot interaction is the ability of artificial agents to understand the way humans think and talk about abstract spatial concepts. To do this, an autonomous agent has to extract information from its sensor to assign a semantic labels to a specific place. In particular, this work focuses on assign label to images. The most important challenges in identifying places come from the complexity of the concepts to be recognized and from the variability of the conditions in which the images are captured. In fact,  scenes from the same category may differ significantly, while images corresponding to different places may look similar. The historical take on these issues has been to model the visual appearance of scenes considering a large variety of (shallow) learning models (e.g. SVMs, Random Forests), but approaches based on learning deep representations have become mainstream. Some work, like [19], demonstrated the benefits derived from feature extraction through convolutional deep neural networks. Subsequent studies demonstrated the benefits of region-based approaches (i.e. considering only specific image parts) in combination with descriptors derived from CNNs, such as to obtain models that are robust to viewpoint changes and occlusions. Other successful works tried to bring back the notion of localities into deep networks, e.g. by designing appropriate pooling strategies or by casting the problem within the Image-2-Class (I2C) recognition statements, with a high degree of success. Despite this, these methods implement the CNN feature extraction and the classifier learning as two separate modules. This leads to two drawbacks: first, choosing heuristically the relevant localities means concretely cropping parts of the images before feeding them to the chosen features extractor. Second, it would be desirable to fully exploit the power of deep networks by directly learning the best representations for the task at hand, rather than re-use architectures trained on general-purpose databases like ImageNet. This work proposes an approach for semantic place categorization which exploits local representations within a deep learning framework. The method is inspired by the recent work [18], which demonstrates that, by dividing images into regions and representing them with CNN-based features, state-of-the-art scene recognition accuracy can be achieved by exploiting an I2C approach, namely a parametric extension of the Naıve Bayes Nearest Neighbor (NBNN) model. The deep architecture for semantic scene classification seamlessly integrates the NBNN and CNN frameworks. We automatize the multi-scale patch extraction process by adopting a fully-convolutional network, guaranteeing a significant advantage in terms of computational cost over two-steps methods. This is the first attempt to fully unify NBNN and CNN, building a network in which the NBNN error is back-propagated to the CNN in a unified end-to-end training. 
 
 ![The standard NBNN classification pipeline (a) versus the proposed model (b). ](images/NBNNdiff.gif)
 
 ## Proposed method
 
-As represented in the figure above, images are decomposed into multiple regions (represented with CNN features) and a part-based classifier is used to infer the labels associated to places. However, differently from previous works, the proposed approach unifies the feature extraction and the classifier learning phases. Since this framework is derived from previous NBNN-based works, it is important to give an overview of this method. 
+As represented in the figure above, images are decomposed into multiple regions (represented with CNN features) and a part-based classifier is used to infer the labels associated with places. However, differently from previous works, the proposed approach unifies the feature extraction and the classifier learning phases. Since this framework is derived from previous NBNN-based works, it is important to give an overview of this method. 
 
 ### Naıve Bayes Non-Linear Learning 
 
-Let ${\mathcal X}$ denote the set of possible images and let ${\mathcal Y}$ be a finite set of class labels, indicating the different scene categories. The goal is to estimate a classifier $f : {\mathcal X} \rightarrow {\mathcal Y}$ from a training set ${\mathcal T} \subset {\mathcal X} \times {\mathcal Y}$. The NBNN method works under the assumption that there is a an intermediate Euclidean space $Z$ and a set-valued function $\phi$ that abstracts an input image $x \in {\mathcal X}$ into a set of descriptors in ${\mathcal Z}$, i.e. $\phi(x) \subset {\mathcal Z}$.  For instance, the image could be broken into patches and a descriptor in ${\mathcal Z}$ could be computed for each patch. Given a training set ${\mathcal T}$, let $\Phi_y({\mathcal T})$ be the set of descriptors computed from images in ${\mathcal T}$ having labels $y \in {\mathcal Y}$, i.e. $\Phi_y({\mathcal T}) = \{\phi(x): x \in {\mathcal X}, (x, y) \in {\mathcal T}\}$ . The NBNN classifier $f_{NBNN}$ is given as follows:
+Let ${\mathcal X}$ denote the set of possible images and let ${\mathcal Y}$ be a finite set of class labels, indicating the different scene categories. The goal is to estimate a classifier $f : {\mathcal X} \rightarrow {\mathcal Y}$ from a training set ${\mathcal T} \subset {\mathcal X} \times {\mathcal Y}$. The NBNN method works under the assumption that there is an intermediate Euclidean space $Z$ and a set-valued function $\phi$ that abstracts an input image $x \in {\mathcal X}$ into a set of descriptors in ${\mathcal Z}$, i.e. $\phi(x) \subset {\mathcal Z}$.  For instance, the image could be broken into patches and a descriptor in ${\mathcal Z}$ could be computed for each patch. Given a training set ${\mathcal T}$, let $\Phi_y({\mathcal T})$ be the set of descriptors computed from images in ${\mathcal T}$ having labels $y \in {\mathcal Y}$, i.e. $\Phi_y({\mathcal T}) = \{\phi(x): x \in {\mathcal X}, (x, y) \in {\mathcal T}\}$ . The NBNN classifier $f_{NBNN}$ is given as follows:
 
 $\begin{equation} f_\mathtt {NBNN}(x; {\mathcal T})=\text{arg min}_{y\in {\mathcal Y}}\sum _{z\in \phi (x)}d(z,\Phi _y({\mathcal T}))^2\,, \end{equation}$
 
-where $d(x, {\mathcal S}) = \inf\{\| z − s\|_2 : s \in {\mathcal S}\}$ denotes the smallest Euclidean distance between $z$ and an element of $  {\mathcal S} \subset {\mathcal Z}$. $f_{NBNN}$ has the drawback of being expensive at test time, due to the nearest-neighbor search. A possible way to reduce the complexity consists in learning a small, finite set ${\mathcal W}_y \subset {\mathcal Z}$ of representative prototypes for each class $y \in {\mathcal Y}$ to replace $\Phi_y({\mathcal T})$. This idea generates the NBNL (Naıve Bayes Non-Linear Learning). NBNL is developed by replacing $\Phi_y({\mathcal T})$ with the set of prototypes ${\mathcal W}_y$ and by assuming ${\mathcal Z}$ to be restricted to the unit ball. Under the latter assumption the bound $d(z, {\mathcal S})^{2} = 2 - \omega(z, {\mathcal S}) $ can be derived, where 
+where $d(x, {\mathcal S}) = \inf\{\| z − s\|_2 : s \in {\mathcal S}\}$ denotes the smallest Euclidean distance between $z$ and an element of $  {\mathcal S} \subset {\mathcal Z}$. $f_{NBNN}$ has the drawback of being expensive at test time, due to the nearest-neighbor search. A possible way to reduce the complexity consists of learning a small, finite set ${\mathcal W}_y \subset {\mathcal Z}$ of representative prototypes for each class $y \in {\mathcal Y}$ to replace $\Phi_y({\mathcal T})$. This idea generates NBNL (Naıve Bayes Non-Linear Learning). NBNL is developed by replacing $\Phi_y({\mathcal T})$ with the set of prototypes ${\mathcal W}_y$ and by assuming ${\mathcal Z}$ to be restricted to the unit ball. Under the latter assumption the bound $d(z, {\mathcal S})^{2} = 2 - \omega(z, {\mathcal S}) $ can be derived, where 
 
 $\begin{equation} \omega (z, {\mathcal S})= \left(\sum _{s\in {\mathcal S}}|\langle z,s\rangle |_+^{q}\right)^{1/q}\,. \end{equation}$
 
@@ -679,7 +679,193 @@ $\begin{equation} f_\mathtt {NBNL}(x; {\mathcal W})=\text{arg max}_{y\in {\mathc
 
 In order to learn the prototypes ${\mathcal W}_y$ for each $y \in {\mathcal Y}$, each descriptor extracted from an image is promoted to a training sample.
 
- 
+### CNN-NBNL
+
+The NBNL model is subsequently combined with a CNN, capable of extracting images' descriptors. In this method, called CNN-NBNL, $\phi(x)$ (the function which extracts descriptors form any image $x \in {\mathcal X}$) is obtained by dividing an image into patches at different scales and by employing a pre-trained CNN-based feature extractor. Formally, if $g_{CNN} : {\mathcal X} \rightarrow {\mathcal Z}$ is the CNN-based feature extractor, $\phi(x)$ is define as follows:
+
+$\begin{equation} \phi _\mathtt {CNN}(x)=\lbrace g_\mathtt {CNN}(\hat{x})\,:\,\hat{x}\in \text{patches}(x)\rbrace \,, \end{equation}$
+
+where $patches(x) \subset {\mathcal X}$ returns a set of patches extracted from the image $x$ at multiple scales (${\hat x}$ is a scaled image), $g_{CNN}$ is a CNN implementation and $g_{CNN}({\hat x})$ is a single descriptor obtained by the image ${\hat x}$. At test time, $f_{NBNL}$ is used with $\phi$ replaced by $\phi_{CNN}$. By moving from hand-crafted features to CNN-based features, the performance of the NBNL classifier improves considerably. Nonetheless, this approach has two limitations:
+
+* it requires the extraction of patches for each image as a pre-processing step and
+* the CNN architecture is used as a mere feature extractor and the method lacks the advantage of an end-to-end trainable system.
+
+### Fully-convolutional CNN-NBNL
+
+To overcome the two limitations reported in the above section, the method proposed in this work uses a fully-convolutional network that incorporates both the CNN features extractor and the NBNL algorithm, making them trainable together. First of all, this model resolves the problem of extracting patches. In fact, this operation, and the subsequent feature extraction performed by CNN, is highly time-consuming. To do this faster, the CNN is replaced by a Fully-Convolutional CNN (FC-CNN), derived from a standard CNN by replacing fully-connected layers with convolutional layers. This network maps an input image of arbitrary size into a set of spatially-arranged output values (descriptors). To simulate multiple scales, the FC-CNN analyzes images from different resolutions, forcing an implicit change of scale in the final descriptors. The FC-CNN is formally called $g_{FCN}$. Its outputs, defined as$g_{FCN}(x, \theta)$ ($\theta$ are the network parameters), is a set of descriptors, one for each spatial location of the final convolutional layer. Defined the FC-CNN that extracts the images' descriptors, the attention is placed on the NBNL classifier. It can be implemented using layers that are commonly found in deep learning frameworks and can thus be easily stacked on top of an FC-CNN. By doing so, the architecture obtained can be trained in an end-to-end way. The final form of the NBNL classifier is given by:
+
+$\begin{equation} f_\mathtt {FCN\,NBNL}(x; {\mathcal W},\theta)=\text{arg max}_{y\in {\mathcal Y}}h(x; {\mathcal W} _y,\theta)\,, \end{equation}$
+
+where $h$ defined below measures the likelihood of $x$ given prototypes in ${\mathcal W}_y$:
+
+$\begin{equation} h(x; {\mathcal W} _y,\theta)=\frac{1}{m}\sum _{\hat{x}\in \text{scale(x)}}\bar{\omega }(\hat{x}; {\mathcal W} _y,\theta) \end{equation}$
+
+and $\bar \omega$ is is the scale-specific normalized score: 
+
+$\begin{equation} \bar{\omega }(\hat{x}; {\mathcal W} _y,\theta)=\frac{1}{\eta (\hat{x})}\sum _{z\in g_\mathtt {FCN}(\hat{x};\theta)}\omega (z; {\mathcal W} _y)\,. \end{equation}$
+
+where $\eta(x)$ is the number of descriptors generated by the FC-CNN from the image $x$. The following figure describes the architecture of the entire system, with particular attention to the NBNL module. The scaled versions of an image $x$ ($\{\hat x_1, ...., \hat x_m\} = scale (x)$) are forwarded in parallel through the net. The green block represents the FC-CNN, while the gray ones implement the NBNL classifier. The red blocks, instead, are active only during training. Parameter $k$ represents the number of classes, $p$ the number of prototypes per class and $q$ is the parameter of the Naıve Bayes Non-Linear Learning algorithm. $conv[W,C]$ is a $W \times W$ convolutional layer with $C$ filters. $relu$ applies the ReLu non-linearity to each element. $pow[E] $ raises each element to the power of $E$. $gconv[G,W,C]$ is a grouped $W \times W$ convolutional layer with $G$ groups and $C$ filters. $reduce[avg]$ averages out the spatial dimensions. $sum$ performs the element-wise sum of the incoming lines. $argmax$ returns the index of the maximum element. $softmax$ applies the softmax operator (normalizes vector values to be in the [0, 1] range with a sum of 1) along the input channels, for each spatial entry of each input line. $logloss[ \frac{1}{\eta (\hat{x}_i)} ]$ sums up the log-loss computed along the input channels of each spatial entry of each input line, and each input line is weighted by $\frac{1}{\eta (\hat{x}_i)}$ .
+
+![The architecture of the proposed method, fully convolutional CNN-NBNL](images/CNNNBNL.gif)
+
+## Experimental results
+
+### Proposed method comparison with baselines
+
+In the first series of experiments, the proposed method is compared with its non-end-to-end counterpart: a CNN-NBNL approach explained in [18]. In addition, other two holistic approaches are chosen for testing the FC-CNN-NBNL method. Both of them have been proposed by Zhou *et al.* [23], [24], in which they pre-train a CNN with a huge dataset and use it as features extractor for learning a linear SVM model. To demonstrate the generality of this work, all approaches are tested through three different base networks: the Caffe [20] version of AlexNet [19], VGG-16 [21] and GoogLeNet [22]. To decide the proper learning rate schedule and number of epochs, the authors performed parameters tuning on a separate validation set. As parameters of the NBNL classifier, the authors chose $k = 10$ and $p = 2$, applying a weight decay of $10^{-5}$ on the prototypes. Notice that the model proposed in this work considered 110 descriptors, while 100 were used for the baseline method in [13]. However, it has been experimentally verified that a difference of 10 descriptors does not influence performance. The experiments are performed using three different datasets: Sports8 (which contains 8 different indoor and outdoor sport scenes), Scene15 (composed by different categories of outdoor and indoor scenes) and MIT67 (which contains images of 67 indoor scenes). For each dataset, the authors took 5 random splits, reporting the results as mean and standard deviation. The following table shows the results of this evaluation.
+
+| **Network** | **Method**  | **Sport8**         | **Scene15**      | **MIT67**        |
+| ----------- | ----------- | ------------------ | ---------------- | ---------------- |
+|             | [23]        | 94.22±0.78         | 91.59±0.48       | 70.8             |
+| AlexNet     | [18]        | 95.29 ± 0.61       | 92.42 ± 0.64     | 73 ± 0.36        |
+|             | FC-CNN-NBNL | **95.58 ± 0.58  ** | **93.63 ± 0.90** | **74.98 ± 0.78** |
+|             | [24]        | 91.00              | 91.25            | 73.30            |
+| GoogLeNet   | [18]        | 93.08 ± 1.78       | 92.29 ± 0.59     | 73.14 ± 1.43     |
+|             | FC-CNN-NBNL | **94.46 ± 0.86**   | **93.68 ± 0.57** | **80.55 ± 0.70** |
+|             | [24]        | 94.17              | 92.12            | 77.63            |
+| VGG-16      | [18]        | 94.79 ± 0.42       | 92.97 ± 0.68     | 77.62 ± 0.97     |
+|             | FC-CNN-NBNL | **97.04 ± 0.27**   | **95.12 ± 0.41** | **82.49 ± 1.35** |
+
+Mean and standard deviation are provided for FC-CNN-NBNL and [13] methods, while for the CNN models in [30], [31] the authors report results from the original letters. For all base networks and datasets, the proposed method outperforms the baselines. Moreover, the end-to-end training model guarantees an improvement in performance compared to its non-end-to-end counterpart CNN-NBNL. While a pre-trained CNN isn't able to extract discriminative features when applied to a specific task, end-to-end training allows to adapting the trained features to fit a precise task. The figure below shows the difference in expressivity form feature extracted by [18] and the proposed method.
+
+![t-SNE visualization of features extracted from 4 classes of the Scene15 dataset. (a) [18], (b) FC-CNN-NBNL](images/tsneNBNL.gif)
+
+To further compare our approach and CNN-NBNL [18], the authors also analyzed the computational time required during the test phase to process an increasing number of patches. The following figure reports the results of this analysis: as expected, the fully-convolutional architecture is greatly advantageous over the CNN-NBNL.
+
+![Computational time at varying number of descriptors](images/NBNLtime.gif)
+
+### Proposed method performance in robot place categorization
+
+These experiments aim to test the proposed method on available robot datasets, in order to verify its robustness to varying environmental conditions and occlusions. 
+
+The first tested dataset is called *COsy Localization Database* (COLD). This database contains three datasets of indoor scenes acquired in three different laboratories from different robots: COLD-Freiburg, COLD-Ljubljana and COLD-Saarbrucken. These data depict significant changes with respect to illumination conditions and time of data acquisition. The models are trained and tested on data collected in the same laboratory, considering 5 random splits and reporting the average values. The following table shows the comparison between the CNN approach explained in [23] and the proposed method.
+
+| **Method**  | **Freiburg** | **Saarbrcken** | **Ljubljana** |
+| ----------- | ------------ | -------------- | ------------- |
+| [23]        | **96.1**     | 96.8           | 98.6          |
+| FC-CNN-NBNL | 95.2         | **97.3**       | **99.2**      |
+
+Despite the [23] method outperforms the proposed method for COLD-Freigurg dataset, the high accuracy of our method also demonstrates that FC-CNN-NBNL is highly effective at discerning among different rooms, even with significant lighting and environmental changes.
+
+The second dataset used for testing the model proposed is called *KTH Image Database for rObot Localization* (KTH-IDOL). This dataset contains image sequences collected by two robots (Dumbo and Minnie) on 5 different rooms along several days on three different illumination conditions: sunny, cloudy and night. Using this dataset, three different types of tests are performed. First, the authors trained and tested using the same robot and the same weather conditions with one sequence used for training and another for testing and vice-versa. As a second experiment, the authors used the same robot for training and testing, varying the weather conditions of the two sets. In the last experiment, the classifier is trained with the same weather condition but it is tested on a different robot. The model proposed in this work is compared with [23] and three state-of-the-art approaches:
+
+* [25] which used high dimensional histogram global features as input for a ${\mathcal X}^{2}$ kernel SVM; 
+* [24] which proposed the CENTRIST descriptor and performed nearest neighbor classification;
+* [27] which used again the nearest neighbor classifier but with Histogram of Oriented Uniform Patterns (HOUP) as features.
+
+The following table shows the results of this evaluation (D and M denotes the names of the robot platform Dumbo and Minnie).
+
+| **Train** | **Test** | **Lighting** | **[25]** | **[26]** | **[27]**  | **[30]** | **FC-CNN-NBNL** |
+| --------- | -------- | ------------ | -------- | -------- | --------- | -------- | --------------- |
+| D         | D        | Same         | 97.26    | 97.62    | 98.24     | 97.12    | **98.61**       |
+| M         | M        | Same         | 95.51    | 95.35    | 96.61     | 95.19    | **97.32**       |
+| D         | D        | Diff         | 80.55    | 94.98    | **95.76** | 92.33    | 94.17           |
+| M         | M        | Diff         | 71.90    | 90.17    | 92.01     | 88.56    | **93.62**       |
+| D         | M        | Same         | 66.63    | 77.78    | 80.05     | 76.22    | **87.05**       |
+| M         | D        | Same         | 62.20    | 72.44    | 75.43     | 77.71    | **88.51**       |
+
+The proposed method outperforms all the baselines in the first and third series of experiments (same lighting). In particular, the large improvements in performance in the third experiment clearly demonstrates its ability to generalize over different input representations of the same scene, independently of the camera mounted on the robot. These results suggest that it should be possible to train offline our model and apply it on arbitrary robotic platforms.
+
+# Conclusions
+
+By seamlessly integrating the CNN and NBNN frameworks, the proposed approach permits to learn local deep representations, enabling robust scene recognition. The authors show that their approach outperforms traditional CNN baselines and previous part-based models that use CNNs purely as features extractors. In robotics scenarios, the deep network proposed achieves state-of-the-art results on three different benchmarks, demonstrating its robustness to occlusions, environmental changes and different sensors.
+
+# Learning to Optimally Segment Point Clouds
+
+*IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 5, NO. 2, APRIL 2020* [28]
+
+## Introduction
+
+This letter focuses on the application of autonomous vehicles. Perception for autonomous robots presents a series of challenges. First, the right representation of the 3D data obtained by a LiDAR sensor still remains an open question. Secondly, contemporary approaches to object detection and scene understanding tend to be closed-world, where the task is predicting 1-of-N possible labels. Finally, practical autonomous robotics makes heavy use of perceptual priors in the forms of geometric maps and assumptions on LiDAR geometry. In this work, the authors focus on the problem of class-agnostic instance segmentation of LiDAR point clouds in an open-world setting. 
+
+![The class-agnostic instance-level segmentation over all foreground points performed by the proposed method ](images/pointcloudseg.gif)
+
+They carefully mix graph-theoretic algorithms with data-driven learning. While data-driven learning is widely used due to its performance, it is difficult to guarantee good results when processing out-of-sample data from an open world. The proposed method searches over an exponentially large space of possible segmentations and returns the one most similar to the data-driven point-based model of "objectness". First, the search is restricted into a subset of segmentations that are consistent with a hierarchical grouping of a point cloud sweep. Such hierarchical groups can be readily produced with agglomerative clustering or hierarchical graph-based algorithms. Since that a segmentation algorithm can produce an exponentially-large set of segmentations, the authors introduce efficient algorithms that search over a space of tree-consistent segmentations and return the one that maximizes a global segmentation score.
+
+## Proposed approach
+
+For 3D object point segmentation, the input is a 3D point cloud, which contains an *unknown* number of objects. The goal is to produce a point segmentation, in which every segment contains points from one and only one object. 
+
+### Definitions
+
+A *global segmentation* $P_X$ is a partition of a set of points $X$ into subsets of points $C_i$ (called local segment), i.e $P_X = \{C_i\}_{i = 1}^{M}$, where $M$ denotes the number of segments and $C_i \subset X$. Importantly, every point exists in one and only one segment. 
+
+The concept of *tree-consistent segmentation* is defined as follows. The set of all possible global segmentations on $X$ is defined as $S_X$. Without constraints, the size of $S_X$ is exponential but in practice the authors reduce the number of candidates by enforcing geometric constraints. All points are grouped hierarchically into a tree structure $T_X$. Now, the tree-consistent segmentation is $S_{X,T}$ and contains all possible segmentation defined by the tree $T$. The following figure illustrates the relationship between $S_X$ and $S_{X,T}$.
+
+![Tree-consistent segmentation](images/treesegment.gif)
+
+Any tree-consistent segmentation from corresponds to a vertex cut set of the tree $T$, i.e. a set of tree nodes, which satisfy the following constraints:
+
+* for each node in the vertex cut, its ancestor and itself cannot both be in the cut and
+* each leaf node must have itself or its ancestor in the cut. 
+
+
+
+The *segment score* is defined as a function $f(C, \theta)$, where $C$ is the segment and $\theta$ are the function parameters. $f$ predicts a given segment’s "objectness" and can be implemented by a PointNet++, where $\theta$ are the network's weights.
+
+The *segmentation score* is calculated as the aggregation of the score of all segments in a global segmentation $P_X$. Formally, given a global segmentation $P_X = \{Ci\}^{M}_{i=1}$,  its score is $F(P_X; \theta) : PX→ [0, 1]$ by aggregating over local objectness of all its segments.
+
+### Worst-case segmentation
+
+The *worst-case segmentation* score of a global segmentation is the worst objectness among its local segments:
+
+$\begin{equation*} F_{\min }(P_X; \theta) = \min _i{f(C_i; \theta)}, i\in {1 \ldots M}. \end{equation*}$
+
+Now, the optimal worst-case segmentation is
+
+$\begin{equation*} P_{X,\min }^* = \mathop{\operatorname{argmax}}\limits_{P_X\in S_{X,T}} {F_{\min } (P_X; \theta)} \end{equation*}$.
+
+It turns out the problem of finding optimal worst-case segmentation has optimal substructure, allowing us to find the global optimum efficiently with dynamic programming (see the following figure).
+
+![Optimal worst case segmentation](images/worstcaseseg.png)
+
+The algorithm starts from the root node $X$ and chooses between a coarse segmentation and a fine one. The fine segmentation will be the union of all $X$‘s children’s optimal worst-case segmentation, which can be computed recursively. The algorithm would first traverse down to the leaf nodes, representing the finest segmentation. Then it will make its way up, during which it finalizes optimal segmentation for each intermediate node by making local coarse vs. fine decisions. Eventually, it returns to the root node and produces an optimal worst-case global segmentation. This algorithm might not visit all nodes. Instead, it skips a sub-trees whenever one sub-tree exhibits a lower score. The algorithm’s complexity is linear in $N$ despite the fact that the search space is exponential in $N$.
+
+### Average-case segmentation
+
+Average-case segmentation score of a global segmentation is the average objectness among its local segments:
+
+$\begin{equation*} F_{\operatorname{avg}{}}(P_X; \theta) = \frac{1}{M} \sum _{i=1}^M f(C_i; \theta).\end{equation*}$
+
+$P_{X,\operatorname{avg}{}}^*$ can be defined as *optimal average-case segmentation* if
+
+$\begin{equation*} P_{X,\operatorname{avg}{}}^* = \mathop{\operatorname{argmax}}\limits_{P_X\in S_{X,T}} {F_{\operatorname{avg}{}} (P_X; \theta)}. \end{equation*}$
+
+It is important to specify that the problem of finding the optimal average-case segmentation does not have optimal substructure, unlike worst-case segmentation.
+
+### Learning the Objectness Function
+
+Until now, the segmentation algorithms have been discussed under the assumption that the objectness function $f(C; \theta)$ is defined (it predicts an objectness score for a given point cloud). First of all, the ground-truth function must be defined. Suppose to have the ground truth segmentation $P^{gt} = \{C_1^{gt},...,C_L^{gt}\}$. To define the target objectness of a segment, we have to consider that 3D sensors (e.g. LiDAR) tend to produce denser points near the sensor. In consequence, the objectness will be heavily influenced by the partitioning of points closer to the sensor. A segment objectness function of a segment is the largest point between itself and any ground truth segment:
+
+$\begin{equation*} Objectness(C, P^{gt}) = \max _{l=1,\ldots,L} \frac{\sum _{x \in C \cap C^{gt}_l} x^T x }{\sum _{x \in C \cup C^{gt}_l} x^T x }, \end{equation*}$
+
+where $x^T x$ represents the squared distance of a point $x$ to sensor origin. The authors train a PointNet++ model for learning the objectness function. Each segment is re-sampled to 1024 points.
+
+### Building tree hierarchies
+
+This section explains how to build a tree structure given a set of points $X$. One natural approach is agglomerative clustering, merging points in classes according to their spatial features. This approach tends to create tree hierarchies with very fine granularity, e.g. one node may differ from another with only one point of difference. In this work, the authors propose a method which builds a coarser tree whose leaf nodes are segments (rather than individual points) and adjacent nodes should differ from each other much more. To build such a tree, Euclidean Clustering algorithm is used recursively in a top-down fashion with a list of decreasing $\epsilon$. In the beginning, the algorithm is run with the largest $\epsilon$ value, defining the most coarse connected components. Then, the procedure is repeated a smaller $\epsilon$ within each connected component. This produces a multiple-tree top-down hierarchy.
+
+## Experiments
+
+For evaluation, the authors repurpose the KITTI object detection benchmark for point cloud segmentation, following the setup in [30]. The ground truth segmentation is composed of a series of point segments marked with a bounding box. All the background points (those outside the bounding box) are removed. To evaluate the performance are considered two metrics: the *under-segmentation error* $U$ and the *over-segmentation error* $O$, defined as follows:
+
+$\begin{align*} U &= \frac{1}{L} \sum _{l=1}^L \mathbf {1} \left(\frac{|C_{i^*} \cap C_l^{gt}|}{|C_{i^*}|} < \tau _U\right) \\ O &= \frac{1}{L} \sum _{l=1}^L \mathbf {1} \left(\frac{|C_{i^*} \cap C_l^{gt}|}{|C_l^{gt}|} < \tau _O\right)\end{align*}$
+
+with 
+
+$\begin{equation*} i^* = \operatorname{argmax}_{i=1}^M{|C_i \cap C^{gt}_l|} \end{equation*}$
+
+and $\tau _U, \tau _O$ as constant thresholds, set to $\frac{2}{3}, 1$.
+
+The Euclidean clustering algorithm is applied with an $\epsilon \in \{2 m, 1 m, 0.5 m, 0.25 m\}$. The authors include it as a baseline to find better solutions. As baselines, other state-of-the-art 3D detectors are included: AVOD, PointPillars, PointRCNN, and SECOND. Since these detectors output class-specific bounding box detection, the authors simply ignore the class label to produce class-agnostic segmentations. In addition, the authors include for evaluation modified versions of the proposed baselines, in order to improve their performance. A much better approach, called *{Detector}++* (e.g. AVOD++ etc.), check if the leftover segments can be included in an existing detection segment. Another approach, SECOND++, consists of re-train and re-evaluate the best baseline, i.e. SECOND, with background removal. These baselines are marked with "+ BG Removal". In addition, the authors discover that, by extending the SECOND’s detection range from 50 m to 80 m, the SECOND’s performance is significantly improved. The affected baselines are marked with "+ Ext. Range". Finally, they re-train and re-evaluate SECOND on all 8 classes. The new baselines are labeled as "SECOND++(8)", while the off-the-shelf SECOND baselines are labeled as "SECOND++(4)". The following figure resumes the results obtained.
+
+![Segmentation errors on the proposed method (*Ours*) and the baselines](images/segmentationerrors.gif)
+
+The table shows that the average-case segmentation, *Ours(avg)*, consistently outperforms the optimal worst-case segmentation *Ours(min)*. *Ours(min)* produces a much lower over-segmentation error but a much higher under-segmentation error, suggesting it makes more mistakes of grouping different objects into one segment and fewer mistakes of splitting points from one single object into multiple segments. The authors label Euclidean Clustering as "EC()," where $\epsilon$ represents the distance threshold (meter) and constructs a pool of segments that contains every node (segment) in the hierarchy and call this "EC(all)*". This serves as an unreachable upper-bound. The gap between our proposed method and the upper bound is relatively small (3–4%), suggesting plenty of room left for improvement in creating better hierarchies. The confront between a *Detector* algorithm and its variation *Detector++*, shows that the improved version obtains better performance (see the AVOD's case). SECOND++ performs the best among all Detector++ baselines. SECOND++ performs better on common classes such as cars while the proposed method perform better on rare ones such as misc. Another evaluation metric is measure how objectness generalizes over different classes. The authors apply the learned objectness onto truth segments from the validation set. The graph below shows the results.
+
+![Learned objectness generalization](images/objectnessgen.gif)
+
+As the number of training data decreases dramatically, the average score tends to drops slightly and the variance tends to rise slightly. In conclusion, the authors prove that their algorithm is guaranteed to achieve optimality to a specific definition. On KITTI, the proposed approach significantly outperforms past bottom-up approaches and top-down object-based algorithms for segmenting point clouds.
 
 # Bibliography
 
@@ -726,6 +912,22 @@ In order to learn the prototypes ${\mathcal W}_y$ for each $y \in {\mathcal Y}$,
 [21] K. Simonyan and A. Zisserman, "Very deep convolutional networks for large-scale image recognition," 2014, arXiv preprint arXiv: 1409.1556.
 
 [22] C. Szegedy et al., "Going deeper with convolutions," in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., 2015, pp. 1–9.
+
+[23] B. Zhou, A. Lapedriza, J. Xiao, A. Torralba, and A. Oliva, "Learning deep features for scene recognition using places database," in Proc. 27th Int. Conf. Neural Inf. Process. Syst., 2014, pp. 487–495. 
+
+[24] B. Zhou, A. Khosla, A. Lapedriza, A. Torralba, and A. Oliva, "Places: An image database for deep scene understanding," 2016, arXiv preprint arXiv: 1610.02055.
+
+[25] A. Pronobis, B. Caputo, P. Jensfelt, and H. I. Christensen, "A discriminative approach to robust visual place recognition," in Proc. IEEE/RSJ Int. Conf. Intell. Robots Syst., 2006, pp. 3829–3836.
+
+[26] J. Wu and J. M. Rehg, "Centrist: A visual descriptor for scene categorization," IEEE Trans. Pattern Anal. Mach. Intell., vol. 33, no. 8, pp. 1489–1501, Aug. 2011.
+
+[27] E. Fazl-Ersi and J. K. Tsotsos, "Histogram of oriented uniform patterns for robust place recognition and categorization," Int. J. Robot. Res., vol. 31, no. 4, pp. 468–483, 2012.
+
+[28] P. Hu, D. Held and D. Ramanan, "Learning to Optimally Segment Point Clouds," in *IEEE Robotics and Automation Letters*, vol. 5, no. 2, pp. 875-882, April 2020, doi: 10.1109/LRA.2020.2965389.
+
+[29] A. Magassouba, K. Sugiura and H. Kawai, "A Multimodal Target-Source Classifier With Attention Branches to Understand Ambiguous Instructions for Fetching Daily Objects," in IEEE Robotics and Automation Letters, vol. 5, no. 2, pp. 532-539, April 2020, doi: 10.1109/LRA.2019.2963649.
+
+[30] D. Held, D. Guillory, B. Rebsamen, S. Thrun, and S. Savarese, "A probabilistic framework for real-time 3D segmentation using spatial, temporal, and semantic cues," Robotics: Science and Systems, 2016.
 
 
 
