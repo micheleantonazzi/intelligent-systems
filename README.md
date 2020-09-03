@@ -204,7 +204,7 @@ Performing visual place recognition (VPR) reliably is a challenge for any roboti
 
 In this work, the authors propose a hybrid neural network that incorporates both computer-science- and neuroscience-oriented models to perform the VPR task. Their approach comprises two key components: FlyNet, a compact neural network, and a 1-d CANN as a temporal model that encodes sequences of images to perform appearance-invariant VPR using real data. The resulting FlyNet+CANN model achieves competitive AUC results, but with far fewer parameters, minimal training time and smaller computational footprint than conventional deep learning and algorithmic-based approaches.
 
-![FlyNet+CANN hybrid neural architecture](images/flynetcann.gif)
+![FlyNet+CANN hybrid neural architecture](images/flynetcann.png)
 
 ## Previous work
 
@@ -216,7 +216,7 @@ To design deep-learning-based models for VPR it is necessary to explore how this
 
 The FlyNet proposed in this works is inspired by the *fly algorithm*. The Drosophila's small brain identifies odors by assigning similar neural activity patterns to similar input odors. The neural networks are composed of 4 layers (the input layer, two hidden layers, and the output layer). The network works as follows. A binary, sparse random matrix (*random projection*) connects the input layer to the second layer: each neuron receives and sums about 10% of the input neurons. This mechanism is also used to connect the second and third layers, but the number of neurons in the third layer is the same as the output one. Finally, using a WTA (winner-take-all) circuit, the third layer's neurons are mapped to the output layer, setting the first 5% with the high value to 1 and the rest to 0. The input layer generates a specific binary identifier for the input odor. The *FlyNet Algorithm* (FNA) proposed in this work is a mapping of the fly algorithm for vision purposes. The only difference is the WTA circuit, which is set to consider true the first 50% of the neurons with the high neurons.
 
-![The fly algorithm's network architecture. The random projection is shown only for the connection between the two hidden layer, but all the input layer is connected to the first hidden layer using the same mechanism](images/fly.gif)
+![The fly algorithm's network architecture. The random projection is shown only for the connection between the two hidden layer, but all the input layer is connected to the first hidden layer using the same mechanism](images/fly.png)
 
 ### FlyNet models
 
@@ -227,7 +227,7 @@ The authors implement a range of VPR models, using FNA and a module with tempora
 - **FlyNet+RNN:** It is a purely neural model that incorporates an RNN on top of FlyNet and terminates with another FC layer. Its architecture is the same as FlyNet (the FC layers have 100 units), with 512 recurrent units. 
 - **FlyNet+CANN:** it incorporates a variation of the CANN architecture proposed in RatSLAM, which is a 1-dimensional model, on top of the FlyNet network. The CANN layer has 1002 units.
 
-![FlyNet models](images/flynetmodels.gif)
+![FlyNet models](images/flynetmodels.png)
 
 ## Experiments
 
@@ -253,23 +253,23 @@ FlyNet (alone) is compared with the other four single-frame models: a simple FC 
 
 FlyNet is directly competitive with both FC networks, despite FlyNet having over 3 times fewer parameters (64 k vs. 199 k). CNN and NetVLAD models, with 6 and 234 times more parameters than FlyNet respectively, the larger the model the better the results we obtained. Under *small environmental changes* (e.g. summer to fall) both networks achieved over 70% AUC. However, under *extreme visual changes* (e.g. summer to winter) all these models show relatively similar results, below 12% AUC, except for NetVLAD with 20% AUC.
 
-![Comparison of FlyNet (alone) to other single-frame neural networks. AUC results across different models on the Nordland dataset (left). Average accuracy over 10 training experiments vs. number of epochs for FlyNet (middle) and a fully connected (FC) network with dropout (right).](images/flynetothermodels.gif)
+![Comparison of FlyNet (alone) to other single-frame neural networks. AUC results across different models on the Nordland dataset (left). Average accuracy over 10 training experiments vs. number of epochs for FlyNet (middle) and a fully connected (FC) network with dropout (right).](images/flynetothermodels.png)
 
 ### FlyNet models evaluation
 
 Although there are significant performance differences at a single-frame matching level, the figure below shows that when using sequence-based filtering techniques these differences reduce significantly. For FlyNet+SeqSLAM, the performance of FlyNet (alone) was significantly improved. Similarly, the RNN layer on top of FlyNet improved even further these results. However, when integrating the output of FlyNet with a 1-d CANN we were able to outperform these models, even under extreme environmental changes: this is the best model.
 
-![AUC results of the four FlyNet models](images/flynetcomparemodels.gif)
+![AUC results of the four FlyNet models](images/flynetcomparemodels.png)
 
 ### Best model vs. state-of-the-art methods
 
 MPF is performing better while being able to recall almost all places at 100% precision on both fall and winter testing traverses. FlyNet+CANN achieves state-of-the-art results, comparable with SeqSLAM and MPF in all these tested traverses.
 
-![AUC results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothers.gif)
+![AUC results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothers.png)
 
 Similarly, PR performance on the Oxford RobotCar dataset is shown in the following figure. FlyNet+CANN not only achieves state-of-the-art results comparable with the other methods, but it maintains PR performance even under extreme environmental changes (e.g. overcast to night), as shown the bottom-right side of the figure.
 
-![PR results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothersPR.gif)
+![PR results of the state-of-the-art methods measured on the two dataset](images/bestmodelvsothersPR.png)
 
 ### Computational performance
 
@@ -284,7 +284,7 @@ The processing time required to perform appearance-invariant VPR by our hybrid m
 
 The following figure shows the comparison between the networks' complexity and the results obtained, viewing the AUC metric for the most challenging appearance change (day to night). The best model proposed in this works obtains the best results with the minimum number of parameters.
 
-![AUC perfoemance vs. network most challenging appearance change (day to night) ](images/flynetothermodeldimensions.gif)
+![AUC perfoemance vs. network most challenging appearance change (day to night) ](images/flynetothermodeldimensions.png)
 
 ## Conclusions
 
@@ -314,7 +314,7 @@ The evaluation metric is the prediction accuracy over the top-1 target predictio
 - **Home Environment:** In this configuration, the experiments use a simulation-based dataset from the Partner Robot Challenge Virtual Space (WRS-PV). WRS-PV depicts home environments as represented in the figure below. The three-dimensional environments (Unity-based) are augmented to make them more realistic. In this environment, a targeted DSR, that is HSR (Human Support Robot), can freely navigate and manipulate objects. In this context, the MTCM-AB predicts the most likely target among several candidates.
 - **Pick-and-Place Scene:** the PFN-PIC [7] dataset is designed for pick-and-place tasks from an armed robot with a top-view camera. The scene consists of four boxes, in which several candidate targets (up to 40) are randomly placed.
 
-![Samples of the WRS-PV (left) and PFN-PIC datasets (right) where the source and target are given.](images/WRS-PVexample.gif)
+![Samples of the WRS-PV (left) and PFN-PIC datasets (right) where the source and target are given.](images/WRS-PVexample.png)
 
 ## Proposed method
 
@@ -354,7 +354,7 @@ The MTCM-AB module produced in this work, similarly to the MTCM, predicts the ta
 
 * **Loss Functions:** the MTCM-AB is trained by minimizing several embedding loss functions related to the different branches. In particular, it minimizes the global loss function $J_{total} = \lambda_cJ_c + \lambda_tJ_t + \lambda_lJ_l + \lambda_pJ_p + \lambda_{src}J_{src}$, where J~i~ is the loss function for the branch i and $\lambda_i$ are loss weights that are defined in the experimental section.
 
-![MTCM-AB architecture](images/MTMC-AB.gif)
+![MTCM-AB architecture](images/MTMC-AB.png)
 
 ## Experiments
 
@@ -389,11 +389,11 @@ In the following figure, the *qualitative results* are reported for the PFN-PIC 
 - "*Move the grey colored bottle at top left to box below*".
 - "*Pick the brown pack and put it in lower left box*"
 
-![Qualitative results for PFN-PIC dataset](images/MTMCqualres1.gif)
+![Qualitative results for PFN-PIC dataset](images/MTMCqualres1.png)
 
 Qualitative results on the WRS-PV dataset are analyzed in the same way. The three first samples illustrate correct predictions with consistent attended regions. The last sample, with the instruction "Take an apple on the same shelf that a coffee cup is placed" is erroneous and our model predicts the cup instead of the apple.
 
-![Qualitative results for WRS-PV dataset](images/MTMCqualres2.gif)
+![Qualitative results for WRS-PV dataset](images/MTMCqualres2.png)
 
 ### Error Analysis
 
@@ -421,7 +421,7 @@ Radars are attractive sensors for intelligent vehicles as they are relatively ro
 
 *RTCnet* classifies each target individually based on the fused low-level and target-level data. The network consists of three parts. The first encodes the data in spatial domains (range, azimuth) and grasps the surroundings’ Doppler distribution. The second is applied to this output to extract class information from the distribution of speed. Finally, the third part provides classifications scores by two fully connected layers (FC). The output is either multi-class (one score for each class) or binary. In the latter case, an ensemble voting step combines the result of several binary classifiers. A class-specific clustering step (i.e. the radar targets’ predicted class information is used) generates an object list output. The following figure shows an overview of our method. 
 
-![The proposed pipeline](images/pipelineoverview.gif)
+![The proposed pipeline](images/pipelineoverview.png)
 
 ### Pre-Processing
 
@@ -447,7 +447,7 @@ To obtain proposals for object detection, the authors cluster the classified rad
 * **B:** large objects may be split up into several clusters
 * **C:** object with only one reflection
 
-![](images/clusteringdiff.gif)
+![](images/clusteringdiff.png)
 
 To address this, the method performs a filtering on the produced object proposals, calculating their spatial, velocity, and class score distribution distances. If two clusters have different classes and are close enough in all dimensions, they are merged the smaller class to the larger (i.e. pedestrians to cyclists and cars, cyclists to cars).
 
@@ -463,7 +463,7 @@ The proposed method is tested in two different experiments:
 
 * **Experiment 2:** this experiment consists of comparing the methods in object detection task, examining the entire pipeline. Predictions and annotations are compared by their intersection and union calculated in number of targets. A true positive is a prediction which has an Intersection Over Union (IoU) bigger than or equal to 0.5 with an annotated object. Further detections of the same ground truth object count as false positives. To better understand this metric, see the figure below.
 
-  ![Object-level metric. Intersection / Union ≥ 0.5 counts as a true positive. In this example, there is a true positive cyclist and a false positive pedestrian detection.](images/iuo.gif)
+  ![Object-level metric. Intersection / Union ≥ 0.5 counts as a true positive. In this example, there is a true positive cyclist and a false positive pedestrian detection.](images/iuo.png)
 
 We selected Schumann [11] as a baseline because it is the only multi-object, multi-class detection method found with small latency. Also, *Prophet* [1] is selected as a baseline. Since the DBSCAN parameters are sensor-specific, the following table shows the optimal parameters for the two baselines and for the class-specific clusters. Both baselines method has the parameter *v~min~*, used to find the static radar targets.
 
@@ -495,7 +495,7 @@ The results of *experiment 1* (target classification) are presented in the follo
 
 *RTCnet* outperformed the two cluster-wise baselines reaching an average score of 0.70. *Schumann* has slightly better results on cyclists than *RTCnet* (0.68 vs 0.67) but performs significantly worse on pedestrians (0.67 vs 0.71) and cars (0.46. vs 0.50). The ablation study showed that removing each feature yields worse results than the complete pipeline, with the exception of *RTCnet (no RCS)* which has an average of 0.69. The results also show that classification performance changes over the distance from the target object and the vehicle, based on the number of samples in the training set. The figure below shows this fact.
 
-![Target-wise scores (lines) and number of targets in training set (bars) in function of distance from vehicle](images/resultsdistance.gif)
+![Target-wise scores (lines) and number of targets in training set (bars) in function of distance from vehicle](images/resultsdistance.png)
 
 For *experiment 2* (object detection), the results are shown in the following table.
 
@@ -511,7 +511,7 @@ For *experiment 2* (object detection), the results are shown in the following ta
 
 The proposed method outperformed the baselines in target classification mainly due to two reasons. First, the classification does not depend on a clustering step. This allows us to handle objects that contain a single radar target (a common occurrence, especially for pedestrians) and mitigates the difficult cases shows in the figure above. Second, the method uses the low-level radar data, which brings the information of the speed distribution around the radar target. To demonstrate that this inclusion is beneficial, the authors show that only using target-level data and only the third module of the network (*RTCnet (no low-level)*) caused a significant drop in performance from 0.70 to 0.61 average score. The results of RTCnet (no low-level) and RTCnet (no speed) prove that the relative velocity distribution (i.e. the low-level radar data) indeed contains valuable class information. Despite the radar's performances are uniform in darkness/shadows/bright environments, its typical errors are shown in the following figure. Radar is easily reflected by flat surfaces (e.g. side of cars) acting like mirrors, creating ghost targets. 
 
-![Examples of radar targets misclassified by RTCnet](images/rtcnetfails.gif)
+![Examples of radar targets misclassified by RTCnet](images/rtcnetfails.png)
 
 The combination of the proposed network and the clustering step outperformed the baseline methods in the object detection task. This is mainly because by swapping the clustering and classifying steps, classes can be clustered with different parameters. This is mainly because by swapping the clustering and classifying steps, classes can be clustered with different and more appropriate parameters.
 
@@ -533,7 +533,7 @@ In computer vision, pattern recognition, and robotics, *point set registration*,
 
 A point cloud is represented as a set of 3D points $\{P : P_i|i = 1, . . ., n\} \subset R_3$ whose each point $P_i$ is a vector of its $(x, y, z)$ coordinate. The following figure shows the CorstNet architecture.
 
-![CorsNet architecture](images/corsnetarch.gif)
+![CorsNet architecture](images/corsnetarch.png)
 
 The red $\boldsymbol{P}_S$ and blue $\boldsymbol{P}_T$ point clouds represent the *source* and *template* point clouds, respectively. We find the rigid transform $\boldsymbol{G} \in SE$, which includes the alignment between $\boldsymbol{P}_S$ and $\boldsymbol{P}_T$. The model mainly consists of three components:
 
@@ -591,7 +591,7 @@ The authors verified the effectiveness of each loss function in the experiments.
 
 The authors proposed a novel method which directly regresses the pose, including rotation $\boldsymbol{R}_{euler} ∈ \R^3 $ (Euler angle) and translation $\boldsymbol{t} ∈ \R^3$, as shown in the following figure. 
 
-![DirectNet architecture](images/directnet.gif)
+![DirectNet architecture](images/directnet.png)
 
 DirectNet consists of two parts: the global feature extraction module, which is identical to CorsNet (that is PointNet), and the global estimation part. The $\boldsymbol{P}_S$ and $\boldsymbol{P}_T$ global features extracted with PointNet are concatenated and converted to 1 × 6 vector. The output 1 × 6 vectors is $[x_{euler}, y_{euler}, z_{euler}, x_{t}, y_{t}, z_{t}]^T$. The first half of this vector is represented as $\boldsymbol{R_{euler}} = [x_{euler}, y_{euler}, z_{euler}]^T$ . This $\boldsymbol{R_{euler}}$ is converted into $\boldsymbol{R_{est}} \in SO $ as follows:
 
@@ -609,7 +609,7 @@ $\begin{align*} \boldsymbol {Loss}_{v1} &= ||(\boldsymbol {G}_{est})^{-1}\cdot \
 
 The proposed method CorsNet is compared with ICP and PointNetLK, DirectNet (described in this work). 
 
-![Point cloud registration. **Green**: source, **Blue**: template, **Red**: transformed point cloud. Only the proposed method achieves accurate registration regardless of the initial perturbations.](images/pointcloudreg.gif)
+![Point cloud registration. **Green**: source, **Blue**: template, **Red**: transformed point cloud. Only the proposed method achieves accurate registration regardless of the initial perturbations.](images/pointcloudreg.png)
 
 The dataset used is ModelNet40, which includes various point clouds with 40 categories. The point clouds' coordinates are normalized to be in the $[0, 1]^3$ interval and the points of each model's surface are sampling to be exactly 1024. The authors measure the root mean square error (RMSE) of rotation $\boldsymbol{R}$ and translation $\boldsymbol{t}$ for each experimental setting. The first experiment consists into evaluate the models using the same categories. 20 categories from the dataset were chosen and they are used for both training and testing of all networks. CorsNet and DirectNet were trained using all the losses reported in the sections above. The authors chose a ground-truth transformation ($\boldsymbol{G}_{gt}$) randomly by an interval of $[0, 45]$ degrees for rotation and $[0, 0.8]$ for translation. The following table shows the evaluation results of all models, using all possible loss functions.
 
@@ -639,13 +639,13 @@ The results show that the proposed CorsNet, whose loss function is $\boldsymbol{
 
 Rotation and translation are estimated most accurately by CorsNet, whose loss function is $\boldsymbol{Loss}_{v4}$. The following figure shows (on its right part) the ratio between the root mean square error with respect to perturbation both for rotation and translation.
 
-![Each graph shows the transition of a root mean square error with respect to the initial perturbation (rotation and translation). The left part refers to the experiments on the same category while the right part refers different categories' experiments](images/mod.gif)
+![Each graph shows the transition of a root mean square error with respect to the initial perturbation (rotation and translation). The left part refers to the experiments on the same category while the right part refers different categories' experiments](images/mod.png)
 
 ## Conclusions
 
 The superiority of the proposed method has been proven qualitatively and quantitatively. CorsNet $\boldsymbol{Loss}_{v3}$ and CorsNet $\boldsymbol{Loss}_{v4}$ ware appreciably more accurate thanCorsNet $\boldsymbol{Loss}_{v1}$ and CorsNet $\boldsymbol{Loss}_{v2}$, depending on whether the correspondence loss is included in the loss function. The following two figure shows the registration results for the methods tested. Only the proposed method (CorsNet) successfully aligns the point clouds without falling into the local minimum, especially where the input point clouds include the repeating structures. 
 
-![Comparison with DirectNet, PointNetLK, and ICP (green: source, blue: template, red: transformed)](images/registrationres.gif)
+![Comparison with DirectNet, PointNetLK, and ICP (green: source, blue: template, red: transformed)](images/registrationres.png)
 
 The authors suppose that this is because only the proposed method links the local features to the global features, making the most of the local and global point cloud information.
 
@@ -657,7 +657,7 @@ The authors suppose that this is because only the proposed method links the loca
 
 An important aspect of human-robot interaction is the ability of artificial agents to understand the way humans think and talk about abstract spatial concepts. To do this, an autonomous agent has to extract information from its sensor to assign a semantic labels to a specific place. In particular, this work focuses on assign label to images. The most important challenges in identifying places come from the complexity of the concepts to be recognized and from the variability of the conditions in which the images are captured. In fact,  scenes from the same category may differ significantly, while images corresponding to different places may look similar. The historical take on these issues has been to model the visual appearance of scenes considering a large variety of (shallow) learning models (e.g. SVMs, Random Forests), but approaches based on learning deep representations have become mainstream. Some work, like [19], demonstrated the benefits derived from feature extraction through convolutional deep neural networks. Subsequent studies demonstrated the benefits of region-based approaches (i.e. considering only specific image parts) in combination with descriptors derived from CNNs, such as to obtain models that are robust to viewpoint changes and occlusions. Other successful works tried to bring back the notion of localities into deep networks, e.g. by designing appropriate pooling strategies or by casting the problem within the Image-2-Class (I2C) recognition statements, with a high degree of success. Despite this, these methods implement the CNN feature extraction and the classifier learning as two separate modules. This leads to two drawbacks: first, choosing heuristically the relevant localities means concretely cropping parts of the images before feeding them to the chosen features extractor. Second, it would be desirable to fully exploit the power of deep networks by directly learning the best representations for the task at hand, rather than re-use architectures trained on general-purpose databases like ImageNet. This work proposes an approach for semantic place categorization which exploits local representations within a deep learning framework. The method is inspired by the recent work [18], which demonstrates that, by dividing images into regions and representing them with CNN-based features, state-of-the-art scene recognition accuracy can be achieved by exploiting an I2C approach, namely a parametric extension of the Naıve Bayes Nearest Neighbor (NBNN) model. The deep architecture for semantic scene classification seamlessly integrates the NBNN and CNN frameworks. We automatize the multi-scale patch extraction process by adopting a fully-convolutional network, guaranteeing a significant advantage in terms of computational cost over two-steps methods. This is the first attempt to fully unify NBNN and CNN, building a network in which the NBNN error is back-propagated to the CNN in a unified end-to-end training. 
 
-![The standard NBNN classification pipeline (a) versus the proposed model (b). ](images/NBNNdiff.gif)
+![The standard NBNN classification pipeline (a) versus the proposed model (b). ](images/NBNNdiff.png)
 
 ## Proposed method
 
@@ -706,7 +706,7 @@ $\begin{equation} \bar{\omega }(\hat{x}; {\mathcal W} _y,\theta)=\frac{1}{\eta (
 
 where $\eta(x)$ is the number of descriptors generated by the FC-CNN from the image $x$. The following figure describes the architecture of the entire system, with particular attention to the NBNL module. The scaled versions of an image $x$ ($\{\hat x_1, ...., \hat x_m\} = scale (x)$) are forwarded in parallel through the net. The green block represents the FC-CNN, while the gray ones implement the NBNL classifier. The red blocks, instead, are active only during training. Parameter $k$ represents the number of classes, $p$ the number of prototypes per class and $q$ is the parameter of the Naıve Bayes Non-Linear Learning algorithm. $conv[W,C]$ is a $W \times W$ convolutional layer with $C$ filters. $relu$ applies the ReLu non-linearity to each element. $pow[E] $ raises each element to the power of $E$. $gconv[G,W,C]$ is a grouped $W \times W$ convolutional layer with $G$ groups and $C$ filters. $reduce[avg]$ averages out the spatial dimensions. $sum$ performs the element-wise sum of the incoming lines. $argmax$ returns the index of the maximum element. $softmax$ applies the softmax operator (normalizes vector values to be in the [0, 1] range with a sum of 1) along the input channels, for each spatial entry of each input line. $logloss[ \frac{1}{\eta (\hat{x}_i)} ]$ sums up the log-loss computed along the input channels of each spatial entry of each input line, and each input line is weighted by $\frac{1}{\eta (\hat{x}_i)}$ .
 
-![The architecture of the proposed method, fully convolutional CNN-NBNL](images/CNNNBNL.gif)
+![The architecture of the proposed method, fully convolutional CNN-NBNL](images/CNNNBNL.png)
 
 ## Experimental results
 
@@ -728,11 +728,11 @@ In the first series of experiments, the proposed method is compared with its non
 
 Mean and standard deviation are provided for FC-CNN-NBNL and [13] methods, while for the CNN models in [30], [31] the authors report results from the original letters. For all base networks and datasets, the proposed method outperforms the baselines. Moreover, the end-to-end training model guarantees an improvement in performance compared to its non-end-to-end counterpart CNN-NBNL. While a pre-trained CNN isn't able to extract discriminative features when applied to a specific task, end-to-end training allows to adapting the trained features to fit a precise task. The figure below shows the difference in expressivity form feature extracted by [18] and the proposed method.
 
-![t-SNE visualization of features extracted from 4 classes of the Scene15 dataset. (a) [18], (b) FC-CNN-NBNL](images/tsneNBNL.gif)
+![t-SNE visualization of features extracted from 4 classes of the Scene15 dataset. (a) [18], (b) FC-CNN-NBNL](images/tsneNBNL.png)
 
 To further compare our approach and CNN-NBNL [18], the authors also analyzed the computational time required during the test phase to process an increasing number of patches. The following figure reports the results of this analysis: as expected, the fully-convolutional architecture is greatly advantageous over the CNN-NBNL.
 
-![Computational time at varying number of descriptors](images/NBNLtime.gif)
+![Computational time at varying number of descriptors](images/NBNLtime.png)
 
 ### Proposed method performance in robot place categorization
 
@@ -778,7 +778,7 @@ By seamlessly integrating the CNN and NBNN frameworks, the proposed approach per
 
 This letter focuses on the application of autonomous vehicles. Perception for autonomous robots presents a series of challenges. First, the right representation of the 3D data obtained by a LiDAR sensor still remains an open question. Secondly, contemporary approaches to object detection and scene understanding tend to be closed-world, where the task is predicting 1-of-N possible labels. Finally, practical autonomous robotics makes heavy use of perceptual priors in the forms of geometric maps and assumptions on LiDAR geometry. In this work, the authors focus on the problem of class-agnostic instance segmentation of LiDAR point clouds in an open-world setting. 
 
-![The class-agnostic instance-level segmentation over all foreground points performed by the proposed method ](images/pointcloudseg.gif)
+![The class-agnostic instance-level segmentation over all foreground points performed by the proposed method ](images/pointcloudseg.png)
 
 They carefully mix graph-theoretic algorithms with data-driven learning. While data-driven learning is widely used due to its performance, it is difficult to guarantee good results when processing out-of-sample data from an open world. The proposed method searches over an exponentially large space of possible segmentations and returns the one most similar to the data-driven point-based model of "objectness". First, the search is restricted into a subset of segmentations that are consistent with a hierarchical grouping of a point cloud sweep. Such hierarchical groups can be readily produced with agglomerative clustering or hierarchical graph-based algorithms. Since that a segmentation algorithm can produce an exponentially-large set of segmentations, the authors introduce efficient algorithms that search over a space of tree-consistent segmentations and return the one that maximizes a global segmentation score.
 
@@ -792,7 +792,7 @@ A *global segmentation* $P_X$ is a partition of a set of points $X$ into subsets
 
 The concept of *tree-consistent segmentation* is defined as follows. The set of all possible global segmentations on $X$ is defined as $S_X$. Without constraints, the size of $S_X$ is exponential but in practice the authors reduce the number of candidates by enforcing geometric constraints. All points are grouped hierarchically into a tree structure $T_X$. Now, the tree-consistent segmentation is $S_{X,T}$ and contains all possible segmentation defined by the tree $T$. The following figure illustrates the relationship between $S_X$ and $S_{X,T}$.
 
-![Tree-consistent segmentation](images/treesegment.gif)
+![Tree-consistent segmentation](images/treesegment.png)
 
 Any tree-consistent segmentation from corresponds to a vertex cut set of the tree $T$, i.e. a set of tree nodes, which satisfy the following constraints:
 
@@ -859,11 +859,11 @@ and $\tau _U, \tau _O$ as constant thresholds, set to $\frac{2}{3}, 1$.
 
 The Euclidean clustering algorithm is applied with an $\epsilon \in \{2 m, 1 m, 0.5 m, 0.25 m\}$. The authors include it as a baseline to find better solutions. As baselines, other state-of-the-art 3D detectors are included: AVOD, PointPillars, PointRCNN, and SECOND. Since these detectors output class-specific bounding box detection, the authors simply ignore the class label to produce class-agnostic segmentations. In addition, the authors include for evaluation modified versions of the proposed baselines, in order to improve their performance. A much better approach, called *{Detector}++* (e.g. AVOD++ etc.), check if the leftover segments can be included in an existing detection segment. Another approach, SECOND++, consists of re-train and re-evaluate the best baseline, i.e. SECOND, with background removal. These baselines are marked with "+ BG Removal". In addition, the authors discover that, by extending the SECOND’s detection range from 50 m to 80 m, the SECOND’s performance is significantly improved. The affected baselines are marked with "+ Ext. Range". Finally, they re-train and re-evaluate SECOND on all 8 classes. The new baselines are labeled as "SECOND++(8)", while the off-the-shelf SECOND baselines are labeled as "SECOND++(4)". The following figure resumes the results obtained.
 
-![Segmentation errors on the proposed method (*Ours*) and the baselines](images/segmentationerrors.gif)
+![Segmentation errors on the proposed method (*Ours*) and the baselines](images/segmentationerrors.png)
 
 The table shows that the average-case segmentation, *Ours(avg)*, consistently outperforms the optimal worst-case segmentation *Ours(min)*. *Ours(min)* produces a much lower over-segmentation error but a much higher under-segmentation error, suggesting it makes more mistakes of grouping different objects into one segment and fewer mistakes of splitting points from one single object into multiple segments. The authors label Euclidean Clustering as "EC()," where $\epsilon$ represents the distance threshold (meter) and constructs a pool of segments that contains every node (segment) in the hierarchy and call this "EC(all)*". This serves as an unreachable upper-bound. The gap between our proposed method and the upper bound is relatively small (3–4%), suggesting plenty of room left for improvement in creating better hierarchies. The confront between a *Detector* algorithm and its variation *Detector++*, shows that the improved version obtains better performance (see the AVOD's case). SECOND++ performs the best among all Detector++ baselines. SECOND++ performs better on common classes such as cars while the proposed method perform better on rare ones such as misc. Another evaluation metric is measure how objectness generalizes over different classes. The authors apply the learned objectness onto truth segments from the validation set. The graph below shows the results.
 
-![Learned objectness generalization](images/objectnessgen.gif)
+![Learned objectness generalization](images/objectnessgen.png)
 
 As the number of training data decreases dramatically, the average score tends to drops slightly and the variance tends to rise slightly. In conclusion, the authors prove that their algorithm is guaranteed to achieve optimality to a specific definition. On KITTI, the proposed approach significantly outperforms past bottom-up approaches and top-down object-based algorithms for segmenting point clouds.
 
@@ -879,11 +879,11 @@ Mobile robots are frequently used to autonomously explore and survey unknown are
 
 The test and training data are obtained from the Stanford 3D Indoor Spaces (S3DIS) dataset. In contains 6 building areas with point clouds segments individually annotated. It also contains 13 classes of objects, like walls, chairs, doors, and other types of furniture. A virtual robot with laser scanners is placed in the environment and acquires laser scans by ray-tracing. The robot is also equipped with cameras so that color information can be mapped onto the point cloud. The robot acquires a scan every $2m$ and ray-tracing is carried out. The figure below shows the original point cloud of a room as well as the resulting point cloud obtained by ray-tracing along a trajectory.
 
-![Visualization of dynamic scanning by ray-tracing for a virtual mobile robot.](images/pointclouds.gif)
+![Visualization of dynamic scanning by ray-tracing for a virtual mobile robot.](images/pointclouds.png)
 
 The proposed incremental segmentation method involves a neural network architecture, named Multi-view Context Pooling Network (MCPNet), that jointly predicts an instance label and a class label for each scanned point. The class label describes the semantic class of a point (i.e. wall, door, table, etc.) whereas the instance label is a unique ID such that only points from the same object instance have the same ID. In an online segmentation procedure, it is important to keep track of newly scanned points and their relationship to previously scanned points. Thus, a voxel grid with a grid size of $0.1m$ is used as a lookup table to store the point coordinates and their corresponding segmentation results: the point cloud is limited to one point per voxel. First, each input scan considers as a valid point only those in an area of radius $2m$ around the robot (points discarded will be considered in future scans). Next, the point coordinates are normalized so that the x-y coordinates are centered around the robot and the z-coordinate is zero at the floor level. The points are then divided into batches of $N\times 6$ matrices, where $N$ is the batch size and the columns are X-Y-Z-R-G-B values. These matrices are passed to the network. MCPNet's architecture is reported in the following figure.
 
-![MCPNet architecture for incremental instance segmentation of 3D point clouds](images/MCPNetarc.gif)
+![MCPNet architecture for incremental instance segmentation of 3D point clouds](images/MCPNetarc.png)
 
 The input matrix is first passed through a 1D convolution layer to form an intermediate $N\times 200$ feature matrix. The network then splits into two branches: the lower branch for classification and the upper branch for clustering. The *lower branch* uses a max-pooling function to compute a global feature vector representing the input points. This is then concatenated with the feature embedding from the upper branch and passed through another 1D convolution layer to compute class probabilities for each point, represented as a $N\times 13$ matrix since there are 13 classes. The *upper branch* aims to project the point features to an embedding space that is suitable for clustering. This is enforced by computing a triplet loss between sets of three points, $p_1$ , $p_2$ which originate from the same object and $p_3$ which originates from a different object and minimizing the resulting loss function (the projection is a function $f : \R^{3} \rightarrow \R^{50}$). At training time, minimizing the triplet loss encourages the distance between points that should belong to the same object to be greater than that of points that should belong to different objects in the embedding space, i.e. $\parallel f(p_1) - f(p_2)\parallel^{2} + \alpha < \parallel f(p_1) - f(p_3)\parallel^{2}$, where $\alpha$ is the margin parameter. At inference time, fo each point $p_i$ a set of neighbor points are retrieved (points that is at most one cell away from $p_i$). Then, each point $p_i$ is only connected to a neighboring point $p_j$ if the cosine similarity
 
@@ -907,19 +907,19 @@ The instance segmentation results were first evaluated in terms of the classific
 
 The table below shows the results obtained.
 
-![Classification accuracy on S3DIS dataset](images/segresultsaccu.gif)
+![Classification accuracy on S3DIS dataset](images/segresultsaccu.png)
 
 Experimental results show that the proposed method with MCP outperforms the other methods in terms of both IOU and accuracy. The authors performed also an analysis of the effect of the number of the context points used in the proposed MCP module on the classification accuracy. The following graph shows that the average accuracy increases with number of context points but also incurs a higher computational cost.
 
-![Classification accuracy and inference rate as a function of the number of context points.](images/MCPpoints.gif)
+![Classification accuracy and inference rate as a function of the number of context points.](images/MCPpoints.png)
 
 On the other hand, the clustering performance was measured using three different metrics: normalized mutual information (NMI), adjusted mutual information (AMI), and adjusted rand index (ARI), as defined in [35]. In particular, PointNet, PointNet++, and VoxNet used a clustering technique in which connected components are formed between points with the same class label, while the remaining methods used the agglomerative clustering technique described in this work, with $\beta = 0.98$ for SGPN and $\beta = 0.9$ for MCPNet. The table below shows the results obtained. 
 
-![Clustering performance on S3DIS dataset](images/clusper.gif)
+![Clustering performance on S3DIS dataset](images/clusper.png)
 
 Results show that even the simple normal + color-based region-growing scheme can achieve a good clustering, but the proposed method with MCP achieved the best clustering result overall. The following figure shows the global instance segmentation results at intermediate points along the incremental scanning process: input point cloud with virtual robot trajectory (top row), clustering results (middle row) and classification results (bottom row).
 
-![Incremental segmentation results on S3DIS test dataset](images/incremseg.gif)
+![Incremental segmentation results on S3DIS test dataset](images/incremseg.png)
 
 Experimental results show that the proposed approach led to 15% improvement in accuracy and 7% improvement in NMI compared to the next best online method.
 
@@ -931,7 +931,7 @@ Experimental results show that the proposed approach led to 15% improvement in a
 
 Dynamic high-speed robotics tasks often require accurate methods to forecast the future value of a physical quantity and these methods must respect the application's real-time constraints. For example, to hit or catch a flying ball, a robot needs to predict accurately and fast the trajectory of the ball. Note that the time it takes to compute the predictions, called *latency*, is as important for the application as the accuracy in the prediction. Physics-based models are often used to trajectory forecasting because of their velocity in making a prediction. Despite this, in some applications, the best known physics-based model is not accurate enough or, even if the physics is accurate, estimating all its relevant variables can be difficult. On the other hand, a data-driven model could overcome these limitations and, generally, their predictions are more accurate. However, the modern data-driven approaches, like those based on recurrent neural networks, suffer from cumulative errors. This work proposes a novel method for trajectory prediction that mixes the power of deep learning and conditional generative models to provide a data-driven approach for accurate trajectory forecasting with the low latency required by real-time applications. The system is tested using a table tennis system, in which two robotic arms has to correctly hit a ball. The figure below shows this system.
 
-![Table tennis robotic system](images/tabletennis.gif)
+![Table tennis robotic system](images/tabletennis.png)
 
 ## Proposed method
 
@@ -951,7 +951,7 @@ The goal is to find a way to represent the conditional distribution $p(y_{t:T} |
 
 Quantifying the uncertainty of the trajectory predicted by the model is important for decision making. In robot table tennis, for example, the robot could wait for more ball observations if there is high uncertainty about the ball trajectory, but waiting too long will result in failure to hit the ball. Uncertainty can be captured using a latent variable $z_n$, that can be mapped to a trajectory using a complex non-linear function. The authors want to emphasize that the limitation of a fixed prediction horizon $T$ means that prediction beyond $T$ can't be done, but the model can be trained with trajectories of any length $T_n$. The proposed approach is based on variational auto-encoders. The decoder network takes as input the previous observations $y_{1:t−1}$ represented by $(x^{t} , \hat x^{t} )$ as well as the latent variable $z$ that encodes one of the possible future trajectories $\hat y$ (which contains the predicted future observations $y_{t:T}$. The encoder network produces the variational distribution $q\varphi(z | y1:t)$, which is a partial trajectory with observations $y_{1:t}$ to the latent space $z$.
 
-![Encoder and decoder networks for the proposed approach](images/encdec.gif)
+![Encoder and decoder networks for the proposed approach](images/encdec.png)
 
 ### Inference and training procedure
 
@@ -965,13 +965,13 @@ The authors evaluate the proposed method (which predicts the trajectory of a tab
 
 The results should be optimal for the physics-based model on simulation, where the only source of error is the initial position and velocity estimation from noisy ball observations. The authors generated 2000 ball trajectories for training and another 200 for the test. The training results obtained in a simulated environment  are plotted in the following figure. In simulation, the error distribution of the proposed method and the physics-based model is almost identical. The results of the LSTM are slightly better than the proposed model for the first 10 observations, but the error for long term prediction grows uncontrollably. 
 
-![Distribution of the error in the test set for simulated data as a function of the number of observations](images/accuracyballres.gif)
+![Distribution of the error in the test set for simulated data as a function of the number of observations](images/accuracyballres.png)
 
 ### Prediction accuracy in the real system
 
 There are several issues that make ball prediction harder on the real system: there are missing observations, the error is not the same in all the space due to the effects of lens distortion, and the ball spin can not be observed directly. The training set has 614 samples, while the test set is composed of 35 trajectories. All samples are collected in a real environment: the ball is thrown using the hand, using a mechanical launcher, and hitting them with a table tennis racket. Since the trajectories have typically a duration between 0.8 and 1.2 seconds, the time horizon is set to $T = 1.2$ seconds. The figure below shows the training results obtained using real-time data. The proposed method outperforms the long term prediction accuracy of the other models. The LSTM, as expected, is very precise at the beginning but starts to accumulate errors and becomes quickly less accurate. The physics-based model is in the middle: more accurate than the LTSM approach but less accurate than TVAE.
 
-![Distribution of the error in the test set for real data as a function of the number of observations](images/accuracyballresreal.gif)
+![Distribution of the error in the test set for real data as a function of the number of observations](images/accuracyballresreal.png)
 
 ### A real robot table tennis system
 
