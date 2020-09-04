@@ -1,195 +1,429 @@
-\section{A Machine Learning Approach to Visual Perception of Forest
-Trails for Mobile Robots}\label{header-n5}
+\section{The limits and potentials of deep learning for
+robotics}\label{header-n5}
 
-\emph{IEEE ROBOTICS AND AUTOMATION LETTERS, VOL. 1, NO. 2, JULY 2016}
+\emph{THE INTERNATIONAL JOURNAL OF ROBOTICS RESEARCH 2018, Vol. 37(4--5)
+405--420} {[}1{]}
 
 \subsection{Introduction}\label{header-n7}
 
-This article studies the problem of perceiving forest or mountain trails
-from a single monocular image acquired from the viewpoint of a robot.
-Autonomously following a man-made trail is challenging for robotics.
-Many robot types, including wheeled, tracked, and legged vehicles, are
-capable of locomotion along real-world trails. Moreover, Micro Aerial
-Vehicles (MAVs) flying under the tree are a compelling and realistic
-option made possible by recent technological advances. One of the
-innovations introduced by this article is that the robot used for the
-experiments is a quadrotor: a drone with four rotors. In order to follow
-a trail, a robot has to perceive where the trail is, then react in order
-to stay on the trail. The robot input is a monocular image from a
-forward-looking camera. Perceiving real-world trails in these conditions
-is an extremely difficult and interesting pattern recognition problem.
-Computer Vision and Robotics literature mainly focused on paved road and
-forest/desert road perception. The latter is a significantly more
-difficult problem: unpaved roads are normally much less structured than
-paved ones. Their appearance is very variable and often boundaries are
-not well defined. In addition, their surface appearance can change very
-frequently, their shape and width are not as constrained, they often
-seamlessly blend with the surrounding area. Previous works deal with the
-task of perceiving trails as a segmentation problem, aiming to determine
-which areas of the input image corresponding to the image of the trail.
-To do this, it is necessary to classify the visual features that
-characterize a trail. All of these techniques are conceptually similar
-to image saliency. A \emph{saliency map} is an image that shows for each
-pixel (of the original image) how much such pixel visually "stands out"
-from the rest. This information, which by itself is expected to be very
-noisy, is aggregated in order to infer the trail position and direction
-in the image. In this work, the authors follow a different approach and
-cast the trail perception problem as an image classification task. The
-robot estimates the approximate direction of the trail with respect to
-the direction of view by adopting a supervised machine learning approach
-based on Deep Neural Networks (DNNs). One of the advantages of DNNs for
-supervised image classification is generality: in fact, features are
-learned directly from data and do not have to be chosen or modeled by
-the algorithm developers for the specific problem. Deep learning is used
-also for obstacle avoidance. Previous work shows how imitation learning
-can be used to steer a quadrotor to avoid trees in an outdoor
-environment. The controller is previously trained by manually piloting
-the robot for a short time. However, the visual perception task is
-harder, requiring a more powerful classifier to be trained with a
-significantly larger training dataset obtained offline.
+A robot is an inherently active agent that interacts with the real world
+and often operates in uncontrolled or detrimental conditions. Mistakes
+can lead to potentially catastrophic results, like put human lives at
+risk, e.g. if the robot is a driverless car. The application of deep
+learning in robotics, therefore, motivates research questions that
+differ from those typically addressed in other domains. How much trust
+can we put in the predictions of a deep learning system when
+misclassifications can have catastrophic consequences? How can we
+estimate the uncertainty in a deep network's predictions and how can we
+fuse these predictions with prior knowledge and other sensors in a
+probabilistic framework? How can we generate enough high-quality
+training data? We can obtain these data in real-world scenarios or we
+can obtain them using data augmentation through simulation? Is there a
+fundamental difference between model-driven and data-driven
+problem-solving? This paper explores some of the challenges, limits, and
+potentials for deep learning in robotics.
 
-\subsection{Proposed method}\label{header-n9}
+\subsection{Challenges for deep learning in robotic
+vision}\label{header-n9}
 
-\subsubsection{Problem formulation}\label{header-n10}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/roboticvision.jpeg}
+	\caption{Current challenges for deep learning in robotic vision}
+\end{figure}
 
-The robot consists of a MAV with a monocular camera, fixed in front of
-it. The drone flies with a height similar to the average height of a
-person (approximately 1.7 meters). The input is an image acquired by the
-camera. The main goal is to remain on the trail analyzing the image
-using a deep learning module. There are considered three different
-classes which correspond to three different actions that the robot
-should implement in order to remain on the trail:
+\emph{Robotic vision} differs from \emph{computer vision} in several
+aspects. In particular, the latter is a part of the first. A robot is an
+active agent that perceives the world with its different sensors, builds
+a coherent model of the world, and updates this model over time, but
+ultimately a robot has to make decisions, plan actions, and execute
+these actions to fulfill a useful task. In fact, for robotic vision,
+perception is only one part of a more complex system. In a simplified
+view, whereas computer vision takes images and translates them into
+information, robotic vision translates images into actions. This
+fundamental difference between robotic vision and computer vision
+motivates a number of research challenges along three conceptually
+orthogonal axes: \emph{learning}, \emph{embodiment}, and
+\emph{reasoning}. We position individual challenges along these axes
+according to their increasing complexity, and their dependencies.
+
+
+
+\subsubsection{Learning challenges}\label{header-n12}
+
+Along this axis, we position challenges that are specific for (deep)
+machine learning in a robotic vision context.
+
+\paragraph{Uncertainty estimation}
+It is important that deep learning systems can reliably estimate the
+uncertainty in their predictions. The robot has to treat a neural
+network in the same way as other sensors, also using Bayesian techniques
+to fuse the network's predictions with prior knowledge to accumulate
+information over time. Typically a deep learning model returns scores
+that are not calibrated probabilities so not useable in a Bayesian
+sensor fusion framework. 
+\paragraph{Identify unknowns}
+
+A common assumption in deep learning is that trained models will be
+deployed under \emph{closed-set} conditions. However, robots often have
+to operate in ever-changing, uncontrolled real-world environments, and
+they will inevitably encounter data not covered by the training data. In
+these \emph{open-set} conditions, it is crucial to identify unknowns
+with high confidence.
+\paragraph{Incremental learning}
+
+A robotic vision system should be able to learn from new training
+samples of known classes during deployment, upgrading its internal
+representations accordingly.
+
+\paragraph{Class-incremental learning}
+
+A robot, therefore, needs the capability to extend its knowledge and
+efficiently learn new classes of interest without forgetting the
+previously learned ones. Current techniques for class-incremental
+learning still rely on supervision in the sense that the user has to
+specifically tell the system which samples are new data.
+
+\paragraph{Active learning}
+
+A robot should be able to select the most informative samples for
+incremental learning techniques on its own. In order to minimize the
+interaction with the humans, the robotic system can also comprise
+retrieving annotations from other sources such as the web.
+
+\newpage
+\subsubsection{Embodiment challenges}\label{header-n24}
+
+\paragraph{Temporal embodiment}
+
+A robotic vision system perceives a stream of consecutive and therefore
+strongly correlated images. The potential of temporal embodiment to
+improve the quality of the perception process for object detection or
+semantic segmentation is currently rarely utilized. A robotic vision
+system that uses its temporal embodiment can, for example, accumulate
+evidence over time or exploit small viewpoint variation. A challenging
+aspect of the temporal embodiment is that the appearance of scenes
+changes over time. An environment can comprise dynamic objects which
+move inside it. Besides, an environment can also change its appearance
+according to different lighting conditions (day/night), structural
+changes in objects (summer/winter).
+
+\paragraph{Spatial embodiment}
+
+The camera of a robotic system is spatially embodied and it will observe
+the scene according to the robot's movements. This fact poses both
+challenges and opportunities to a robotic vision system: it can help to
+disambiguate its semantic properties, improve depth perception, or
+segregate an object from other objects or the background in cluttered
+scenes. On the other hand, occlusions can alter or changes the visual
+perception.
+
+\paragraph{Active vision}
+
+One of the biggest advantages of a robot is the potential to control the
+camera, move it, and change its viewpoint independently from the robot's
+movements. In this way, a dynamic robotic vision system can improve its
+perception confidence, resolve ambiguities, and mitigate the effect of
+occlusions or reflections.
+
+\paragraph{Manipulation for perception}
+
+As an extension of active vision, a robotic system could manipulate the
+scene to improve its perception. For example, a robot could move
+occluding objects or move an object to see its occluded faces.
+
+\subsubsection{Reasoning challenges}\label{header-n33}
+
+Von Helmholtz (1867) formulated the idea that humans use unconscious
+reasoning when processing visual information, in order to inference
+concepts or make conclusions. The following searches investigate these
+unconscious mechanisms and reformulated them in a Bayesian inference
+framework.
+
+\paragraph{Reasoning about object and scene semantics}
+
+The world around us contains many semantic regularities that humans use
+to aid their perception: objects tend to appear more often in a certain
+context, some objects tend to appear in groups, some objects rarely
+appear together in a scene, and so on. If these semantic regularities
+can be used by a vision system as prior knowledge, we can expect an
+improved and more robust vision framework.
+
+\paragraph{Reasoning about object and scene geometry}
+
+Many applications in robotics require knowledge about the geometry of
+individual objects, or the scene as a whole. Estimating the 3D structure
+of scenes or objects from multiple views without having depth
+information is a widely researched topic. A robot, differently from a
+classical approach, has to perform this task in cluttered scenes, where
+the objects are not clearly separated. A robot needs the ability to
+express uncertainty in the inferred object shape and it should be able
+to exploits its embodiment to move the camera to collect new and more
+useful information. Inference over the geometry of the whole scene is
+related also to object-based simultaneous localization and mapping
+(SLAM).
+
+\paragraph{Joint reasoning about semantics and geometry}
+
+The final reasoning challenge for a robotic vision system, therefore, is
+the ability to reason jointly about the semantics and the geometry of a
+scene. Semantics and geometry can help each other: a tightly coupled
+inference approach can be advantageous compared to two systems that work
+separately.
+
+\subsection{The evaluation method for deep learning models applied to
+robotics}\label{header-n41}
+
+Normally the good deep learning performance is not reached when the
+models are used in real environments. The evaluation method used in
+computer vision fails when applied in robotics: a robot has to interact
+with a dynamic environment and not with a simple set of images
+downloaded from the Internet. When a statistic report indicates that a
+dataset has been solved, it does not necessarily mean that the problem
+itself has been solved. The available datasets often are not able to
+able to correctly evaluate the performance of a robotic deep learning
+model. One of the reasons is the datasets' inability to give to the
+model information about the unknowns aspect of real environments. In
+particular, \emph{Open set recognition} refers to scenarios where
+incomplete knowledge of the world is present at training time. This
+implies that unknown classes can be submitted to the model during its
+operation. What is needed is a new class of machine learning algorithms
+that minimize the risk of the unknown. To do this, updated evaluation
+protocols are also needed. These protocols have to incorporate data that
+is both know and unknown to a model. Another important aspect is the
+systematic study of the performance of a recognition model across an
+exhaustive range of object appearances. To better understand this
+mechanisms, inner in the humans' visual system, psychophysics discipline
+can be used. Psychophysics investigates the relationship between
+physical stimuli and the sensations and perceptions they produce. This
+concept can be translated into the field of deep learning: we would like
+to know under what conditions a machine learning model is able to
+operate successfully, as well as where it begins to fail. But how
+exactly can Psychophysics be applied to deep models? One possibility is
+through a computational pipeline that is able to perturb the data at a
+massive scale (e.g. millions of images per image transformation being
+studied) and submit them to a model, studying its performance through
+the item--response curve. The key to interpreting the results is the
+ability to identify the model's preferred view. The preferred view
+concept derives from vision science, which has established that humans
+possess an internalized canonical view (the visual appearance that is
+easiest to recognize) for individual object classes. Similarly,
+recognition models have one or more preferred views of an object class,
+each of which leads to a maximum (or minimum) score output. The
+psychophysics progresses support a growing trend in robotics and
+computer vision: simulation using rendered graphics. The models'
+performance can be assessed by comparing the respective item--response
+curves. Importantly, this technique can find potential gaps not only
+between different models but also between human and model behavior.
+Human performance vastly exceeds model performance even in cases where a
+problem has been assumed to be solved, especially comparing the
+item-response curves.
+
+\subsection{The role of simulation for pixel-to-action
+robotics}\label{header-n43}
+
+\emph{Deep reinforcement learning} is a new learning paradigm that is
+capable of learning end-to-end robotic control tasks, but its results
+have been demonstrated primarily in simulation, rather than on real
+robot platforms. Demonstrating learning capabilities on real robots
+remains a significant challenge: the long, data-hungry training paradigm
+of pixel-based deep robotic learning methods are too computationally
+hard to be executed by a robotic platform. On the other hand, in
+simulation, the training time can be greatly reduced by using dedicated
+hardware and parallelism paradigms. Another important difference that
+often separates a simulated task and its real-world analog concerns raw
+pixel inputs. One solution is to use transfer learning methods, but
+there exist fewer approaches for transfer from simulation to reality for
+robot domains. Another one consists of augmenting the target
+domain data with data from the source domain. Another approach is to use
+a ``confusion" loss that forces the model to ignore data variations that
+separate the two domains. A more recent simulation-to-real solution
+relies on the \emph{progressive network} architecture, which enables
+transfer learning through lateral connections that connect each layer of
+previously learned deep networks to new networks to model the gap
+between the two domains. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/progressivenets.jpeg}
+	\caption{Detailed schematic of progressive recurrent network architecture}
+\end{figure}
+
+The progressive networks advantages for
+simulation-to-real transfer are the following:
 
 \begin{itemize}
 \item
-  \textbf{Turn Left (TL):} if $−90\degree \textless{} \alpha \textless{} −\beta$; the
-  trail is heading towards the left part of the image
+  the features learned for one task may be transferred to many new
+  tasks;
 \item
-  \textbf{Go Straight (GS):} if $−\beta \leq  \alpha \textless{} +\beta$; the trail is
-  heading straight ahead, at least in the close range
+  the columns may be heterogeneous, which may be important for solving
+  different tasks, including different input modalities, or simply to
+  improve learning speed when transferring to the real robot;
 \item
-  \textbf{Turn Right (TR):} if $+\beta \leq \alpha \textless{} +90\degree$; the trail is
-  heading towards the right part of the image
+  progressive nets add new capacity, including new input connections,
+  when transferring to new tasks. This is advantageous for bridging the
+  reality gap, to accommodate dissimilar inputs between simulation and
+  real sensors.
 \end{itemize}
 
-With $\beta$ = 15\degree.
 
-\subsubsection{Dataset}\label{header-n47}
 
-Recognize a trail is a very hard task and the learning machine needs a
-large and well-formed dataset to perform this task effectively. Such a
-dataset does not exist and the authors had to create it from scratch. A
-hiker was equipped with three head-mounted cameras: one pointing 30◦ to
-the left, one pointing straight ahead, and one pointing 30◦ to the
-right. The fields of view of the three cameras partially overlap and
-cover approximately 180 degrees. The hiker then swiftly walks a long
-trail, by taking care of always looking straight along its direction of
-motion. The dataset is composed of the images acquired by the three
-cameras, labeled as follows: all images acquired by the central camera
-are of class GS, those acquired by the right camera are of class TL and
-the others (acquired by the left camera) make up the TR class. The
-dataset is composed of 8 hours of 1920 × 1080 30fps video acquired using
-three GoPro Hero3 Silver cameras and covers approximately 7 kilometers
-of hiking trails acquired at altitudes ranging from 300 m to 1200 m,
-different times of the day and weather. The dataset has been split into
-disjoint training (17,119 frames) and testing (7,355 frames) sets.
+\subsection{Deep learning and physics-based models}\label{header-n53}
 
-\subsubsection{Deep neural network}\label{header-n55}
+The predominant approach to perception, planning, and control in
+robotics is to use approximate models of the physics underlying a robot,
+its sensors, and its interactions with the environment. These models
+require that their parameters are known with sufficient accuracy and can
+be tracked over time. This requirement poses overly challenging demands
+on system identification and perception, resulting in brittle systems.
+On the other hand, humans operate under intuitive rather than exact
+physical models. For this reason, they are capable of robustly
+performing a wide variety of tasks. Also, deep learning is moving in
+this direction: a lot of approaches forgot the use of explicit physics
+models, learning predictive models, and controls from raw experiences.
+Let's now confront the model-based and deeply learned approaches.
+Model-based approaches have wide applicability since the physics
+underlying them are universal. However, at the same time, the parameters
+of these models are difficult to estimate from perception. Deep
+learning, on the other hand, enables highly robust performance when
+trained on sufficiently large data sets but it does not have the general
+applicability of physics-based reasoning. Model-based approaches are
+significantly more data-efficient, related to their smaller number of
+parameters but the basin of convergence can be rather small. In
+contrast, deep learned solutions are often very fast and can have very
+large basins of convergence. However, they do not perform well if
+applied in a regime outside the training data. The following table
+resumes the principles just reported.
 
-The authors implement the trail perception module as DNN (deep neural
-network), which is a feed-forward network built using successive pairs
-of convolutional and max-pooling layers, followed by several fully
-connected layers. To improve the network performances, the training set
-is augmented by synthesizing left/right mirrored versions of each
-training image. Additionally, mild affine distortions (±10\%
-translation, ±15◦ rotation, ±10\% scaling) are applied to training
-images to further increase the number of samples. The DNN is trained
-using backpropagation for 90 epochs, with a learning rate initially set
-to 0.005, then scaled by a factor of 0.95 per epoch. The free parameters
-(weights) are initialized with random numbers from a uniform
-distribution in the range {[}−0.05, 0.05{]} and they are optimized using
-stochastic gradient descent. The network has an input layer formed by a
-matrix of 3 × 101 × 101 neurons. To fit with the input layer, the images
-are first anisotropically resized (with an anti-aliasing technique) to a
-size of 101 × 101 pixels. The pixels intensity are rescaled to the range
-{[}-1, +1{]}. The DNN's output layer has 3 neurons, one for each of the
-three classes TL, TR, GS.
-
-\subsubsection{Experimental results}\label{header-n72}
-
-For the three-class classification problem, the absolute accuracy metric
-is computed to evaluate the model performances. To have a more robust
-performance evaluation, the authors consider a derived two-class
-classification problem. The resulting problem consists in determining if
-an image is of class GS or not. There are calculated accuracy,
-corresponding precision (the proportion of positive classifications that
-are actual positives), recall (the proportion of the actual positives
-that are identified correctly), and the area under the ROC curve. The
-authors compare the DNN performance to three alternatives:
-
-\begin{itemize}
-\item
-  \textbf{Simple Saliency-based Model:} it is computed a saliency map of
-  the input frame, based on the image hue. The saliency map is
-  discretized to 16 × 9 blocks, and the average saliency for each block
-  yields a 144-dimensional feature vector. An SVM model with an RBF
-  kernel is learned from the training set to map this feature vector to
-  the three-class: TL, GS, and TR.
-\item
-  \textbf{The method by Santana et al:} this algorithm is explained in
-  {[}12{]} and it is applied to the dataset images (50 iterations per
-  frame). Its output trail soft segmentation is sampled at each of the
-  testing frames.
-\item
-  \textbf{Two human observers:} each of which is asked to classify 200
-  randomly sampled images from the testing set in one of the three
-  classes.
-\end{itemize}
-
-The obtained results are reported it the following tables.
-
-\begin{longtable}[]{@{}llllll@{}}
-
+\begin{longtable}[]{@{}lll@{}}
 \toprule
-& \textbf{DNN} & \textbf{Saliency} & \textbf{{[}2{]}} & \textbf{Human1}
-& \textbf{Human2}\tabularnewline
+& \textbf{Model-based} & \textbf{Deep learning}\tabularnewline
 \midrule
 \endhead
-\textbf{Accuracy} & 85.2\% & 52.3\% & 36.5\% & 86.5\% &
-82.0\%\tabularnewline
+\emph{Presentation} & Explicit: based on or inspired by physics &
+Implicit\tabularnewline
+\emph{Generality} & Broadly applicable (physics are universal) & Only in
+trained regime\tabularnewline
+\emph{Robustness} & Small basin of convergence  & Large basin of convergence
+\tabularnewline
+Data efficiency & Very high &
+Training requires a lot of data \tabularnewline
+Computational efficiency & Good in local regime & Highly efficient once
+trained\tabularnewline
 \bottomrule
-\caption{Result for the three-class problem}
+\caption{Models versus deep learning}
 \end{longtable}
 
-\begin{longtable}[]{@{}llllll@{}}
-\toprule
-& \textbf{DNN} & \textbf{Saliency} & \textbf{{[}2{]}} & \textbf{Human1}
-& \textbf{Human2}\tabularnewline
-\midrule
-\endhead
-\textbf{Accuracy} & 95.0\% & 73.6\% & 57.9\% & 91.0\% &
-88.0\%\tabularnewline
-\textbf{Precision} & 95.3\% & 60.9\% & 39.8\% & 79.7\% &
-84.0\%\tabularnewline
-\textbf{Recall} & 88.7\% & 46.6\% & 64.6\% & 95.1\% &
-81.6\%\tabularnewline
-\textbf{AUC} & 98.7\% & 75.9\% & - & - & -\tabularnewline
-\bottomrule
-\caption{Result for the two-class problem}
-\end{longtable}
+\newpage
+\subsection{Towards an automation of informatics}\label{header-n80}
 
-\subsubsection{Conclusion}\label{header-n191}
+Deep learning will change the foundations of computer science. The
+successes of deep learning in various domains changing the algorithm
+design paradigm. While designing a specific algorithm requires a lot of
+experience and knowledge about the problem domain, machine learning
+techniques allow us to solve even a difficult task with little to no
+knowledge of the problem domain.
 
-The model has good performance, even when compared to those of humans.
-However, problems arise when applying this model in the real world. The
-authors implemented this model in a real drone, with a camera that
-captures frames with a resolution of 752 × 480 pixels. The main problem
-is the much lower image quality acquired by the quadrotors' cameras as
-compared to the GoPro's images in the training dataset. This yielded a
-lower performance of the classifier compared to the testing dataset.
-This was especially apparent in situations with strong sky-ground
-contrast. Another problem is related to the trail width: the robot is
-often unable to negotiate trails if there is not enough free space
-beside the trail centerline. Despite this, on wide trails with even
-lighting conditions, the robot was able to successfully follow the trail
-for a few hundreds of meters.
+\paragraph{Programming versus data}
+
+The programming paradigm is changing rapidly with the evolution of
+machine learning. In traditional computer science, human experts program
+problem-specific algorithms that require no additional data to solve a
+particular problem instance. On the other hand, a generic learning
+approach needs a large amount of data to find a computational solution
+automatically. The act of \emph{programming} is replaced by
+\emph{training} on the other end. The concept of the program is turned
+into the learning weights of the network. The programming language (the
+language in which a solution is coded), is replaced by network
+architecture, loss function, training procedure, and data.
+
+\paragraph{Does understand imply a precise approach?}
+
+Computer programs reflect human understanding: a programmer has to
+understand the problem he is solving. If it is using deep learning
+techniques, we might say that less knowledge is required. The trend for
+a good programmer should be to understand the problem he is facing. To
+do this, often it needs to be able to use generic tools, such as deep
+learning, to discover problem structure. Furthermore, a programmer
+should understand how problems can be divided into parts: those parts
+for which we know the structure (and, therefore, can write algorithms
+for) and those for which we would like to discover the structure.
+
+\paragraph{Generic tools might help us identify new structures}
+
+As mentioned before, a programmer can use generic tools to acquire the
+knowledge needed to solve a problem and code a specific program. It
+might be difficult to extract this knowledge from a deep neural network
+but that should simply motivate researchers to develop methods for
+extracting this knowledge. This procedure is possible, as shown by
+recent experiments, but the extracted knowledge is really difficult to
+be used to design a specific algorithm. In addition, the neural networks
+further complicate this process: they simply memorize the training
+parameters, making so hard to extract the problem structure from them.
+
+\paragraph{Complex problems should be solved by decomposition and
+re-composition}
+
+In many cases, interesting and complex problems will exhibit complex
+structures because they are composed of sub-problems. For many
+sub-problems, we already have excellent algorithmic solutions while, for
+many others, domain-specific programs are outperformed by deep neural
+networks. The re-composition can be achieved with differentiable
+versions of existing algorithms that are compatible solutions obtained
+with back-propagation
+
+\paragraph{Decomposability of problems}
+
+A problem is called \emph{decomposable} or \emph{near-decomposable} if
+there is little complexity in the interactions among its sub-problems
+and most of the complexity is handled within those sub-problems. For
+example, the brain is not decomposable because the interactions between
+its components still contain much of the complexity of the original
+problem. Despite decomposition helps to dominate the problem complexity,
+this is not true for deep neural networks. In fact for end-to-end models
+giving up strict boundaries between sub-problems improves their
+solution. The authors suspect that there are optimal factorizations of
+problems for a defined task, agent, and environment. Despite this,
+factorization may not lead to simple interfaces between sub-problems but
+certainly facilitates finding an optimal solution.
+
+\paragraph{Automating programming}
+
+Programming should be easy to automate. If we can successfully apply
+generic methods to complex problems, extract an algorithmic knowledge
+from the resulting solutions, use the resulting algorithms to solve
+sub-problems of the original problem, thereby making that original
+problem more easily solvable, and so forth, then we can also imagine an
+automated way of deriving computer algorithms from problem-specific
+data. A key challenge will be the automatic decomposition or
+factorization of the problem into suitably solvable sub-problems. This
+view raises some fundamental questions about the differences between
+\emph{programs} in programming and \emph{weights} in deep learning.
+Programs and weights, in this view, are different instances of the same
+thing: there is no qualitative difference between them. It seems
+plausible that when parameters are so specific we can call the program,
+but the reverse is also true. It is possible that other problems do not
+have algorithmic characteristics and can only be solved in a data-driven
+way.
+
+\paragraph{Priors to reduce the amount of data}
+
+The process for acquiring the data can be very costly, especially when
+these data have to be acquired from interaction with the real world, as
+is the case in robotics. It will then become necessary to reduce the
+required amount of data by incorporating appropriate priors into
+learning. These priors reduce all possible interpretations of data to
+only those consistent with the prior.
+
+\subsection{Conclusions}\label{header-n96}
+
+The robotics community had accepted deep learning as a very powerful
+tool and begun to utilize and advance it. Despite this, the authors hope
+to see more integrated approaches in the future: robots that learn to
+utilize their embodiment to reduce the uncertainty in perception,
+decision making, and execution. Robots that learn complex multi-stage
+tasks. Robots that learn to discover and exploit the rich semantic
+regularities and geometric structure of the world. It is necessary to
+keep in mind that robotic perception, robotic learning, and robotic
+control are tasks that continue to pose severe challenges to the
+techniques typically applied.
